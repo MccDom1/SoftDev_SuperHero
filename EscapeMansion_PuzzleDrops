@@ -1,0 +1,5 @@
+//[PZ#]~[Item#]~[Item]~[Type]~[Description]~[Damage]~[Effect]~[Health Increase]
+PZ#03~A_5~ATTACK POTION~CONSUMABLE~A vial that emits a bright yellow glow. As you hold it, you can't help but feel a sense of immense power.~null~increaseAttack()~null
+PZ#05~A_8~RUSTED AXE~WEAPON~A rusty axe, but the blade is still sharp. The monsters had better watch out.~12~null~null
+PZ#06~A_7~GOLF CLUB~WEAPON~A heavy iron golf club. You could do some damage with this.~8~null~null
+PZ#07~A_17~MASTER ROOM KEY~PUZZLE~A large brass key covered in rust.~null~null~null
