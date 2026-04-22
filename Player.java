@@ -1,194 +1,179 @@
+/**
+ * Player Class
+ *
+ * PURPOSE:
+ * Represents the player's state throughout the game. This includes location,
+ * health, inventory, equipped items, and active puzzle interaction.
+ *
+ * DESIGN:
+ * - Stores only player-related data (no game logic decisions)
+ * - Keeps track of movement, combat readiness, and inventory management
+ * - Designed to be updated by GameModel rather than controlling the game itself
+ *
+ * NOTE:
+ * This class focuses on state management, allowing other parts of the system
+ * (like GameModel) to handle gameplay rules and interactions.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Player
- *
- * Notes to self:
- * - This class should focus on PLAYER STATE, not full game logic.
- * - Keep this class responsible for what the player "has" and "is",
- *   not for controlling the whole world.
- * - The model can ask the player questions like:
- *      "What room are you in?"
- *      "What items are you carrying?"
- *      "What item is equipped?"
- *      "How much health do you have?"
- */
 public class Player {
 
-    // Current room the player is standing in right now.
+    // Tracks the current room the player is in
     private int currentRoomId;
 
-    // Useful for things like flee / backtracking / returning after an event.
+    // Stores the previous room (used for backtracking or penalties)
     private int previousRoomId;
 
-    // Basic player health setup.
+    // Current health of the player
     private int health;
+
+    // Maximum health cap
     private int maxHealth;
 
-    // Player inventory should live here because it belongs to the player.
+    // Stores all items collected by the player
     private List<Item> inventory;
 
-    // Keeping one equipped item for now keeps the design simple.
-    // If the project expands later, this can become equippedWeapon / equippedArmor / etc.
-    private Item equippedItem;
+    // Currently equipped weapon (affects damage output)
+    private Item equippedWeapon;
 
-    /*
+    // Currently equipped armor (affects incoming damage)
+    private Item equippedArmor;
+
+    // Tracks the current puzzle the player is interacting with
+    private Puzzle currentPuzzle;
+
+    /**
      * Constructor
      *
-     * Notes to self:
-     * - Game starts with a room id.
-     * - Start health at 100 because that matches the game rules.
-     * - Inventory starts empty.
+     * Initializes the player with a starting room and default stats.
      */
     public Player(int startingRoomId) {
         this.currentRoomId = startingRoomId;
         this.previousRoomId = startingRoomId;
-
         this.maxHealth = 100;
         this.health = 100;
-
         this.inventory = new ArrayList<>();
-        this.equippedItem = null;
+        this.equippedWeapon = null;
+        this.equippedArmor = null;
+        this.currentPuzzle = null;
     }
 
-    // -----------------------------
-    // Room tracking
-    // -----------------------------
+    // Returns current player location
+    public int getCurrentRoomId() { return currentRoomId; }
 
-    public int getCurrentRoomId() {
-        return currentRoomId;
-    }
-
+    /**
+     * Updates player location.
+     * Also stores the previous room before moving.
+     */
     public void setCurrentRoomId(int currentRoomId) {
-        // Before changing current room, store the old one.
-        // This gives us a clean "where was the player just before this?" value.
         this.previousRoomId = this.currentRoomId;
         this.currentRoomId = currentRoomId;
     }
 
-    public int getPreviousRoomId() {
-        return previousRoomId;
-    }
+    public int getPreviousRoomId() { return previousRoomId; }
 
-    public void setPreviousRoomId(int previousRoomId) {
-        this.previousRoomId = previousRoomId;
-    }
+    // Allows manual override if needed (rare use case)
+    public void setPreviousRoomId(int previousRoomId) { this.previousRoomId = previousRoomId; }
 
-    // -----------------------------
-    // Health
-    // -----------------------------
+    public int getHealth() { return health; }
 
-    public int getHealth() {
-        return health;
-    }
-
+    /**
+     * Sets player health with bounds checking.
+     * Prevents health from going below 0 or above maxHealth.
+     */
     public void setHealth(int health) {
-        /*
-         * Notes to self:
-         * - Never let health drop below 0.
-         * - Never let health go above maxHealth.
-         * - That keeps player state clean without needing extra checks everywhere else.
-         */
-        if (health < 0) {
-            this.health = 0;
-        } else if (health > maxHealth) {
-            this.health = maxHealth;
-        } else {
-            this.health = health;
-        }
+        if (health < 0) this.health = 0;
+        else if (health > maxHealth) this.health = maxHealth;
+        else this.health = health;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
-    }
+    public int getMaxHealth() { return maxHealth; }
 
+    /**
+     * Updates max health and ensures current health stays valid.
+     */
     public void setMaxHealth(int maxHealth) {
-        /*
-         * Notes to self:
-         * - Max health should never be less than 1.
-         * - If max health shrinks, current health should not stay above it.
-         */
-        if (maxHealth < 1) {
-            this.maxHealth = 1;
-        } else {
-            this.maxHealth = maxHealth;
-        }
-
-        if (health > this.maxHealth) {
-            health = this.maxHealth;
-        }
+        this.maxHealth = Math.max(1, maxHealth);
+        if (health > this.maxHealth) health = this.maxHealth;
     }
 
-    public boolean isAlive() {
-        return health > 0;
+    /**
+     * Applies damage to the player.
+     */
+    public void takeDamage(int amount) {
+        setHealth(health - amount);
     }
 
-    // -----------------------------
-    // Inventory
-    // -----------------------------
+    // Returns true if player is still alive
+    public boolean isAlive() { return health > 0; }
 
-    public List<Item> getInventory() {
-        return inventory;
-    }
+    public List<Item> getInventory() { return inventory; }
 
+    /**
+     * Adds an item to the player's inventory.
+     * Also removes it from the room by setting its roomId to -1.
+     */
     public void addItem(Item item) {
-        /*
-         * Notes to self:
-         * - Only add if item actually exists.
-         * - Convention used here:
-         *      roomId = -1 means the item is in the player's inventory.
-         * - That makes file-loaded objects easier to reuse.
-         */
         if (item != null) {
             inventory.add(item);
             item.setRoomId(-1);
         }
     }
 
+    /**
+     * Removes an item from inventory.
+     */
     public boolean removeItem(Item item) {
-        if (item == null) {
-            return false;
-        }
-        return inventory.remove(item);
+        return item != null && inventory.remove(item);
     }
 
+    /**
+     * Searches for an item in inventory by name (case-insensitive).
+     */
     public Item findItemInInventory(String itemName) {
-        /*
-         * Notes to self:
-         * - Search by name, case-insensitive.
-         * - This is used a lot by the model, so it belongs here.
-         */
-        if (itemName == null || itemName.trim().isEmpty()) {
-            return null;
-        }
+        if (itemName == null) return null;
 
         for (Item item : inventory) {
             if (item.getName().equalsIgnoreCase(itemName.trim())) {
                 return item;
             }
         }
-
         return null;
     }
 
+    // Convenience method to check if player has an item
     public boolean hasItem(String itemName) {
         return findItemInInventory(itemName) != null;
     }
 
-    // -----------------------------
-    // Equipped item
-    // -----------------------------
+    public Item getEquippedWeapon() { return equippedWeapon; }
 
-    public Item getEquippedItem() {
-        return equippedItem;
+    // Sets equipped weapon (used for combat damage)
+    public void setEquippedWeapon(Item equippedWeapon) {
+        this.equippedWeapon = equippedWeapon;
     }
 
-    public void setEquippedItem(Item equippedItem) {
-        this.equippedItem = equippedItem;
+    public Item getEquippedArmor() { return equippedArmor; }
+
+    // Sets equipped armor (used for damage reduction)
+    public void setEquippedArmor(Item equippedArmor) {
+        this.equippedArmor = equippedArmor;
     }
 
-    public void clearEquippedItem() {
-        this.equippedItem = null;
+    public Puzzle getCurrentPuzzle() { return currentPuzzle; }
+
+    // Updates the current puzzle based on room interaction
+    public void setCurrentPuzzle(Puzzle currentPuzzle) {
+        this.currentPuzzle = currentPuzzle;
+    }
+
+    /**
+     * Returns player to their previous room.
+     * Used for penalties like failed puzzles.
+     */
+    public void returnToPreviousRoom() {
+        currentRoomId = previousRoomId;
     }
 }
