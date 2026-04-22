@@ -1,9 +1,6 @@
 public class Item {
-    // Notes to self:
-    // This is the cleaned-up version of the artifact idea.
-    // Keep Jake's original shape (name/type/description/health/damage),
-    // but make it actually compile and fit the rest of the game.
-
+    // Create variables to represent properties and characteristics
+	
     private final String id;
     private final String name;
     private final String type;
@@ -13,6 +10,8 @@ public class Item {
     private int roomId;
     private boolean consumable;
     private boolean equippable;
+    
+    //Setter for all properties
 
     public Item(String id, String name, String type, String description,
                 int healthEffect, int damageEffect,
@@ -27,6 +26,8 @@ public class Item {
         this.consumable = consumable;
         this.equippable = equippable;
     }
+    
+    //Getters for all properties
 
     public String getId() { return id; }
     public String getName() { return name; }
