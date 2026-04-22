@@ -1,7 +1,0 @@
-//[Room#]~[Item#]~[Item]~[Type]~[Description]~[Damage]~[Added HP]
-R_1~A_6~BROKEN DAGGER~WEAPON~A chipped and rusted dagger. It's weak, but it's better than nothing.~5~null
-R_9~A_16~BITTER HERB~CONSUMABLE~A bundle of herbs. You would hate to eat them.~null~null
-R_13~A_10~SWORD~WEAPON~A pristine steel sword. A true warrior's weapon.~15~null
-R_18~A_9~GRENADE~WEAPON~A WWII-style grenade.~25~null
-R_20~A_12~PLATE ARMOR~EQUIPMENT~A heavy suit of body armor. Wearing it makes you feel invincible.~null~50
-R_21~A_15~SILVER COG~PUZZLE~A small gear with precise cuts. Its purpose is unknown for now, but it seems important.~null~null
