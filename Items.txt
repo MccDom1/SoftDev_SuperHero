@@ -1,0 +1,13 @@
+# id|name|type|description|health|damage|roomId|consumable|equippable
+A_6|Broken Dagger|Weapon|A chipped and rusted dagger. Weak, but better than nothing.|0|5|1|false|true
+A_16|Bitter Herb|Puzzle|A bundle of herbs that should not be eaten raw.|0|0|9|false|false
+A_10|Sword|Weapon|A sharp steel sword in surprisingly good condition.|0|15|13|false|true
+A_15|Silver Cog|Puzzle|A small gear with precise cuts. It feels important.|0|0|21|false|false
+A_1|Apple|Consumable|A fresh red apple that looks safe enough to eat.|10|0|3|true|false
+A_11|Leather Armor|Equipment|Lightweight body armor made of worn leather.|0|5|7|false|true
+A_12|Plate Armor|Equipment|A heavy suit of armor that offers strong protection.|0|10|20|false|true
+A_17|Master Room Key|Puzzle|A large brass key covered in rust.|0|0|17|false|false
+A_20|Stone|Puzzle|A smooth ancient stone with a faint glow.|0|0|14|false|false
+A_21|Final Key|Puzzle|A jeweled key that seems to pulse with energy.|0|0|23|false|false
+A_7|Golf Club|Weapon|A heavy iron golf club with a nasty swing.|0|8|8|false|true
+A_8|Rusted Axe|Weapon|A rusty axe with a still-dangerous blade.|0|12|11|false|true
