@@ -1,3 +1,20 @@
+/**
+ * GameModel Class     Author Dominique M.
+ *
+ * PURPOSE:
+ * Core logic engine of the game. Handles player actions, world interaction,
+ * and overall game state progression.
+ *
+ * DESIGN:
+ * - Acts as the main Model in MVC architecture
+ * - Coordinates Player, GameWorld, Room, Item, Puzzle, and Monster systems
+ * - Returns structured results using GameResult instead of direct output
+ *
+ * NOTE:
+ * Designed for scalability and modular expansion (combat, puzzles, inventory, etc.)
+ * while maintaining clean separation from UI logic.
+ */
+
 public class GameModel {
     private GameWorld world;
     private Player player;
