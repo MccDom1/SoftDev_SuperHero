@@ -1,0 +1,5 @@
+# id|name|description|roomId|health|damage|hostile|lootIds
+M_5|Ghoul|An overworked servant turned monstrous guardian of a special room.|6|120|20|true|A_11
+M_6|Butler|A remnant soul who seems more guide than enemy.|11|999|0|false|
+M_5B|Ghoul|A damp, sour ghoul lurking in the basement shadows.|12|120|20|true|A_17
+M_7|Specter|The cursed master of the mansion and final boss of the estate.|22|300|10|true|A_21
