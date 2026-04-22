@@ -1,6 +1,8 @@
 public class Puzzle {
+
     private String puzzleId;
     private String puzzleName;
+    private String roomId;
     private String roomName;
     private String description;
     private String solution;
@@ -12,11 +14,12 @@ public class Puzzle {
     private String successMessage;
     private String failMessage;
 
-    public Puzzle(String puzzleId, String puzzleName, String roomName, String description,
+    public Puzzle(String puzzleId, String puzzleName, String roomId, String roomName, String description,
                   String solution, int maxAttempts, String reward,
                   String successMessage, String failMessage) {
         this.puzzleId = puzzleId;
         this.puzzleName = puzzleName;
+        this.roomId = roomId;
         this.roomName = roomName;
         this.description = description;
         this.solution = solution;
@@ -29,49 +32,18 @@ public class Puzzle {
         this.failMessage = failMessage;
     }
 
-    public String getPuzzleId() {
-        return puzzleId;
-    }
-
-    public String getPuzzleName() {
-        return puzzleName;
-    }
-
-    public String getRoomName() {
-        return roomName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getReward() {
-        return reward;
-    }
-
-    public String getSuccessMessage() {
-        return successMessage;
-    }
-
-    public String getFailMessage() {
-        return failMessage;
-    }
-
-    public int getAttemptsUsed() {
-        return attemptsUsed;
-    }
-
-    public int getRemainingAttempts() {
-        return maxAttempts - attemptsUsed;
-    }
-
-    public boolean isSolved() {
-        return solved;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
+    public String getPuzzleId() { return puzzleId; }
+    public String getPuzzleName() { return puzzleName; }
+    public String getRoomId() { return roomId; }
+    public String getRoomName() { return roomName; }
+    public String getDescription() { return description; }
+    public String getReward() { return reward; }
+    public String getSuccessMessage() { return successMessage; }
+    public String getFailMessage() { return failMessage; }
+    public int getAttemptsUsed() { return attemptsUsed; }
+    public int getRemainingAttempts() { return maxAttempts - attemptsUsed; }
+    public boolean isSolved() { return solved; }
+    public boolean isActive() { return active; }
 
     public boolean hasAttemptsRemaining() {
         return attemptsUsed < maxAttempts;
@@ -84,7 +56,10 @@ public class Puzzle {
 
         attemptsUsed++;
 
-        if (solution.equalsIgnoreCase(answer.trim())) {
+        String normalizedInput = answer.trim();
+        String normalizedSolution = solution.trim();
+
+        if (normalizedSolution.equalsIgnoreCase(normalizedInput)) {
             solved = true;
             active = false;
             return true;
