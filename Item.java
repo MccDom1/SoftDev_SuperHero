@@ -1,5 +1,5 @@
 public class Item {
-    // Notes to self:
+    // Notes to self: 
     // This is the cleaned-up version of the artifact idea.
     // Keep Jake's original shape (name/type/description/health/damage),
     // but make it actually compile and fit the rest of the game.
