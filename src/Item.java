@@ -1,4 +1,5 @@
 public class Item {
+
     // Create variables to represent properties and characteristics
 	
     private final String id;
@@ -53,4 +54,3 @@ public class Item {
         return name;
     }
 }
-
