@@ -1,1 +1,7 @@
-/bin/
+*.class
+bin/
+out/
+target/
+.settings/
+.metadata/
+.DS_Store
