@@ -15,7 +15,7 @@
  * The controller should not contain major game rules. Its job is mainly to
  * translate user input into actions the model understands.
  */
-public class GameController {
+public class GameController     {
 
     // Reference to the game logic layer
     private GameModel model;

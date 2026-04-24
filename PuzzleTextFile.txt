@@ -1,7 +1,15 @@
-PZ01|The Scholar's Sequence|R_4|Library|Three brightly colored books (Red, Yellow, Blue) sit out of place on a shelf.|Red,Yellow,Blue|3|Access to Secret Passage|The click of the shelf is music to your ears! Knowledge truly is the key. You may proceed.|Wrong sequence. The books reset, you take damage, and are sent back.
-PZ02|The Broken Lullaby|R_16|Nursery|A music box plays an odd, discordant tune. A gear is missing.|Silver Cog|3|Shield|Sweet harmony! The melody is restored and your prize is revealed. Well played!|The music box snaps shut, you take damage, and are sent back.
-PZ03|The Chef's Secret|R_10|Kitchen|A recipe book has a greasy thumbprint over the final ingredient for a Soul Soup.|Bitter Herb|3|Attack Potion|The final ingredient settles into the pot, and a hidden compartment opens.|The pot bubbles violently, toxic smoke fills the room, and you are sent back.
-PZ04|The Silent Prayer|R_14|Underground Chapel|A locked box requires a combination of strange symbols found on the walls.|Eye,Star,Dagger|5|Hearthstone|The box clicks open and reveals the Hearthstone.|The symbols glow wrongly, you take damage, and the puzzle resets.
-PZ05|The Butler's Riddle|R_11|Butlers Pantry|The Butler asks: I'm always with you at dinner, yet you never get to eat me. I rest beside the plate and help you take your first bite. What am I?|Napkin|3|Rusted Axe|The Butler bows and rewards you for your answer.|Incorrect. The Butler vanishes, you take damage, and must leave and return.
-PZ06|The Mirror's Reflection|R_8|Ballroom|A cracked mirror reflects the room, and the piano plays three unfinished number sequences. Finish what the mirror cannot.|6|3|Golf Club|The mirror shatters, revealing a hidden wall safe.|The piano groans, you take damage, and are returned to the previous room.
-PZ07|The Ghost's Toll|R_17|Bathroom|The bathtub is filled with murky water. A prompt asks for a gift of life.|Apple|4|Master Room Key|The water clears and reveals the key beneath the surface.|The water remains black, you take damage, and are sent back.
+puzzleID | puzzleName | puzzleDescription | puzzleSolution | numAttempts | isSolved | puzzleOutcome | roomName | roomID 
+
+PZ01 | The Scholar's Sequence | Three brightly colored books (Red, Yellow, Blue) sit out of place on a shelf. Put books in order to access the passage: | Red, Yellow, Blue | 3 | false | Access to Secret Passage | Library | R_4
+
+PZ02 | The Broken Lullaby | A music box plays an odd, discordant tune. A gear is missing. | Use "Silver Cog" (found in Broom Cupboard) to open the music box. | 3 | false | Item Dropped: Silver Cog = Health: +15 HP | Nursery | R_16
+
+PZ03 | The Chef's Secret | A recipe book has a greasy thumbprint over the final ingredient for a "Soul Soup." | Add "Bitter Herb" (from Conservatory) to the pot to open a hidden compartment. | 3 | false | Item Dropped: Attack Potion = Attack: +15 | Kitchen | R_10
+
+PZ04 | The Silent Prayer | A locked box requires a combination of three strange symbols (Eye, Star, Dagger) found on the walls. Put symbols in order to open the box: | Eye, Star, Dagger | 5 | false | Item Dropped: Health Stone (use to escape mansion) | Secret Underground Chapel | R_14
+
+PZ05 | The Butler's Riddle | The Butler asks: "I'm always with you at dinner, yet you never get to eat me. I rest beside the plate and help you take your first bite. What am I?" | Napkin | 3 | false | Item Dropped: Rusted Axe = Attack +12 | Butler's Pantry | R_11
+
+PZ06 | The Mirror's Reflection | A cracked mirror reflects the room, and the piano plays an unfinished number sequence. Finish what the mirror cannot. | Interact with the Grand Piano by playing the reflection's last note: 1, 2, 3, 4, 5, _ | 3 | false | Item Dropped: Golf Club = Attack: +8 | Ballroom | R_8
+
+PZ07 | The Ghost's Toll | The water is murky. Use the item that is the "gift of life" to clear the water. | Use "Apple" in the bathtub. | 4 | false | Item Dropped: Master Room Key | Bathroom | R_17

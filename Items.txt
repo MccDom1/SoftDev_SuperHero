@@ -1,13 +1,23 @@
-# id|name|type|description|health|damage|roomId|consumable|equippable
-A_6|Broken Dagger|Weapon|A chipped and rusted dagger. Weak, but better than nothing.|0|5|1|false|true
-A_16|Bitter Herb|Puzzle|A bundle of herbs that should not be eaten raw.|0|0|9|false|false
-A_10|Sword|Weapon|A sharp steel sword in surprisingly good condition.|0|15|13|false|true
-A_15|Silver Cog|Puzzle|A small gear with precise cuts. It feels important.|0|0|21|false|false
-A_1|Apple|Consumable|A fresh red apple that looks safe enough to eat.|10|0|3|true|false
-A_11|Leather Armor|Equipment|Lightweight body armor made of worn leather.|0|5|7|false|true
-A_12|Plate Armor|Equipment|A heavy suit of armor that offers strong protection.|0|10|20|false|true
-A_17|Master Room Key|Puzzle|A large brass key covered in rust.|0|0|17|false|false
-A_20|Stone|Puzzle|A smooth ancient stone with a faint glow.|0|0|14|false|false
-A_21|Final Key|Puzzle|A jeweled key that seems to pulse with energy.|0|0|23|false|false
-A_7|Golf Club|Weapon|A heavy iron golf club with a nasty swing.|0|8|8|false|true
-A_8|Rusted Axe|Weapon|A rusty axe with a still-dangerous blade.|0|12|11|false|true
+itemId, itemName, itemType, itemDescription, StatValue
+
+A_1, Apple, consumable, A fresh red apple sits on a dusty table. It looks safe to eat... probably. Health: +10 HP, 10
+A_2, Milk, consumable, A glass of milk is on the counter. Upon closer inspection, you notice its thickness and the smell makes you gag. Health: -20 HP, 20
+A_3, Spirit Potion, consumable, A vial shines bright blue on the floor. You can't help but feel safe when near it. Health: +25 HP, 25
+A_4, Curse Potion, consumable, A vial with a smokey liquid inside. You hear voices as you stare at the vial. I think they are saying "Help". Removes 1 curse., 1
+A_5, Attack Potion, consumable, A vial that emits a bright yellow glow. As you hold it you can't help but feel a sense of immense power. Attack: +15, 15
+A_6, Broken Dagger, weapon, A chipped and rusted dagger. It's weak, but better than nothing, Attack: +5, 5
+A_7, Golf Club, weapon, A heavy iron golf club. I could do some damage with this., Attack: +8, 8
+A_8, Rusted Axe, weapon, A rusty axe, but the blade is still sharp. The monsters better watch out. Attack: +12, 12
+A_9, Grenade, weapon, A WWII style grenade. Attack: +25, 25
+A_10, Sword, weapon, A sharp, steel, and pristine sword. A true warrior's weapon. Attack: +15, 15
+A_11, Leather Armor, equipment, This body armor is a perfect fit. The leather makes it flexible and lightweight. Armor: +20, 20
+A_12, Plate Armor, equipment, A heavy suit of body armor, wearing it makes you feel invincible. Armor: +50, 50
+A_13, Leather Helmet, equipment, A leather helmet with clear signs of being used in battle. It's smelly but do you really want to risk less protection? Armor: +10, 10
+A_14, Plate Helmet, equipment, A sturdy helmet that looks to be in mint condition. It would take a lot of force to dent this helmet. Armor: +40, 40
+A_15, Silver Cog, utility, A small gear with precise cuts. Repairs the music box., 0
+A_16, Bitter Herb, utility, A bundle of herbs. I would hate to eat. An ingredient for soul soup., 0
+A_17, Master Room Key, utility, A large brass key covered in rust. Unlocks Master Bedroom., 0
+A_18, Ghost Key, utility, A dark black key covered in webs. A small tag on it reads "Attic". Opens the Attic., 0
+A_19, Closet Key, utility, A small basic key that says "Closet". Opens the closet., 0
+A_20, Health Stone, utility, A smooth ancient stone with a faint glow. It pulses slowly almost as if it were a heartbeat. Use to escape the mansion., 0
+A_21, Final Key, utility, A majestic key covered with jewels and pulsing, waiting to be used. Unlocks Saferoom., 0

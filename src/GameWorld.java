@@ -21,21 +21,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class GameWorld {
 
     // Stores all rooms by their ID for quick lookup
-    private final Map<Integer, Room> rooms;
+    private final java.util.Map<Integer, Room> rooms;
 
     // Stores all items by ID
-    private final Map<String, Item> itemsById;
+    private final java.util.Map<String, Item> itemsById;
 
     // Stores all puzzles by ID
-    private final Map<String, Puzzle> puzzlesById;
+    private final java.util.Map<String, Puzzle> puzzlesById;
 
     // Stores all monsters by ID
-    private final Map<String, Monster> monstersById;
+    private final java.util.Map<String, Monster> monstersById;
 
     /**
      * Constructor

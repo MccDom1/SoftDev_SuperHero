@@ -32,6 +32,15 @@ public class Puzzle {
         this.failMessage = failMessage;
     }
 
+    // ======================== // CONSTRUCTOR OVERLOAD FOR MAP DATA // ========================
+    public Puzzle(String puzzleId, String puzzleName, String description, String solution,
+                  int maxAttempts, boolean solved, String outcome) {
+        this(puzzleId, puzzleName, "", "", description, solution, maxAttempts,
+                outcome, outcome, "Puzzle failed. Try again.");
+        this.solved = solved;
+        this.active = !solved;
+    }
+
     public String getPuzzleId() { return puzzleId; }
     public String getPuzzleName() { return puzzleName; }
     public String getRoomId() { return roomId; }

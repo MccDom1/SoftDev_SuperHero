@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Room {
     // Marquella's room idea, adapted to fit the rest of the system.
@@ -10,7 +9,7 @@ public class Room {
     private String roomName;
     private String roomDesc;
     private boolean visited;
-    private Map<String, Integer> exits;
+    private java.util.Map<String, Integer> exits;
     private List<Item> roomInventory;
     private Puzzle puzzle;
     private Monster monster;
@@ -27,6 +26,24 @@ public class Room {
         this.monster = null;
     }
 
+    // ======================== // CONSTRUCTOR OVERLOAD FOR MAP DATA // ========================
+    public Room(String roomCode, String roomName, String roomDesc) {
+        this(parseRoomNumber(roomCode), roomCode, roomName, roomDesc);
+    }
+
+    private static int parseRoomNumber(String roomCode) {
+        if (roomCode == null) {
+            return -1;
+        }
+
+        try {
+            return Integer.parseInt(roomCode.replace("R_", "").trim());
+        }
+        catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
     public int getRoomId() { return roomId; }
     public String getRoomCode() { return roomCode; }
     public String getName() { return roomName; }
@@ -34,15 +51,34 @@ public class Room {
 
     public void addExit(String direction, int targetRoomId) {
         if (targetRoomId > 0) {
-            exits.put(direction.toUpperCase(), targetRoomId);
+            exits.put(normalizeDirection(direction), targetRoomId);
         }
     }
 
-    public int getExit(String direction) {
-        return exits.getOrDefault(direction.toUpperCase(), -1);
+    // ======================== // EXIT OVERLOAD FOR MAP DATA // ========================
+    public void addExit(String direction, String targetRoomCode) {
+        int targetRoomId = parseRoomNumber(targetRoomCode);
+        addExit(direction, targetRoomId);
     }
 
-    public Map<String, Integer> getExits() {
+    public int getExit(String direction) {
+        return exits.getOrDefault(normalizeDirection(direction), -1);
+    }
+
+    private String normalizeDirection(String direction) {
+        if (direction == null || direction.trim().isEmpty()) {
+            return "";
+        }
+
+        String value = direction.trim().toUpperCase();
+        if (value.startsWith("N")) return "N";
+        if (value.startsWith("E")) return "E";
+        if (value.startsWith("S")) return "S";
+        if (value.startsWith("W")) return "W";
+        return value;
+    }
+
+    public java.util.Map<String, Integer> getExits() {
         return exits;
     }
 
@@ -74,6 +110,7 @@ public class Room {
 
     public Puzzle getPuzzle() { return puzzle; }
     public void setPuzzle(Puzzle puzzle) { this.puzzle = puzzle; }
+    public void addPuzzle(Puzzle puzzle) { this.puzzle = puzzle; }
 
     public Monster getMonster() { return monster; }
     public void setMonster(Monster monster) { this.monster = monster; }

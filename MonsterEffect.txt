@@ -1,0 +1,13 @@
+monsterId | itemName | dropChance | roomID
+
+M_1 | Apple | 55 | any
+M_1 | Milk | 30 | any
+M_1 | Spirit Potion | 6 | any
+M_1 | Attack Potion | 4 | any
+M_1 | Curse Potion | 3 | any
+M_1 | Leather Helmet | 1.5 | any
+M_1 | Leather Armor | 0.5 | any
+
+M_4 | Ghost Key | 75 | any
+M_4 | Plate Helmet | 8 | any
+M_4 | Attack Potion | 7 | any
