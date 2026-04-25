@@ -140,7 +140,6 @@ public class GameWorld {
 
                 if (line.equals("") || line.startsWith("monsterId")) continue;
 
-                // ✅ FIX: use | instead of comma
                 String[] parts = line.split("\\|");
 
                 if (parts.length < 8) continue;
