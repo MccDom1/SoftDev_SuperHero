@@ -1,18 +1,24 @@
 public class GameResult {
 
-    // ======================== // VARIABLES // ========================
     private String message;
     private boolean showRoom;
     private boolean showPuzzle;
+    private boolean gameOver;
 
-    // ======================== // CONSTRUCTOR // ========================
     public GameResult(String message, boolean showRoom, boolean showPuzzle) {
         this.message = message;
         this.showRoom = showRoom;
         this.showPuzzle = showPuzzle;
+        this.gameOver = false;
     }
 
-    // ======================== // GETTERS // ========================
+    public GameResult(String message, boolean showRoom, boolean showPuzzle, boolean gameOver) {
+        this.message = message;
+        this.showRoom = showRoom;
+        this.showPuzzle = showPuzzle;
+        this.gameOver = gameOver;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -23,5 +29,9 @@ public class GameResult {
 
     public boolean shouldShowPuzzle() {
         return showPuzzle;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 }

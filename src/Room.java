@@ -4,38 +4,26 @@ import java.util.Map;
 
 public class Room {
 
-    // ======================== // VARIABLES // ========================
     private String roomID;
     private String roomName;
     private String roomDesc;
-
     private boolean visited;
-
     private Map<String, String> exits;
-
     private ArrayList<Item> roomInventory;
-
     private Puzzle puzzle;
-
-    // ✅ ADDED: Monster support
     private Monster monster;
 
-    // ======================== // CONSTRUCTOR // ========================
     public Room(String roomID, String roomName, String roomDesc) {
         this.roomID = roomID;
         this.roomName = roomName;
         this.roomDesc = roomDesc;
-
         this.visited = false;
-
         this.exits = new HashMap<>();
         this.roomInventory = new ArrayList<>();
-
         this.puzzle = null;
         this.monster = null;
     }
 
-    // ======================== // GETTERS // ========================
     public String getRoomID() {
         return roomID;
     }
@@ -48,7 +36,6 @@ public class Room {
         return roomDesc;
     }
 
-    // ======================== // EXIT METHODS // ========================
     public String getExit(String direction) {
         if (direction == null) return null;
         return exits.get(direction.toLowerCase());
@@ -60,11 +47,20 @@ public class Room {
         }
     }
 
-    public Map<String, String> getExits() {
-        return exits;
+    public String getExitList() {
+        if (exits.isEmpty()) {
+            return "none";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String direction : exits.keySet()) {
+            sb.append(direction).append(" ");
+        }
+
+        return sb.toString().trim();
     }
 
-    // ======================== // VISITED TRACKING // ========================
     public void setVisited(boolean visited) {
         this.visited = visited;
     }
@@ -73,15 +69,6 @@ public class Room {
         return visited;
     }
 
-    public boolean trackVisit() {
-        if (visited) {
-            return true;
-        }
-        visited = true;
-        return false;
-    }
-
-    // ======================== // ROOM ITEMS // ========================
     public void addItem(Item item) {
         if (item != null) {
             roomInventory.add(item);
@@ -104,10 +91,22 @@ public class Room {
                 return roomInventory.remove(i);
             }
         }
+
         return null;
     }
 
-    // ======================== // PUZZLE METHODS // ========================
+    public Item findItemByName(String itemName) {
+        if (itemName == null) return null;
+
+        for (Item item : roomInventory) {
+            if (item.getName().equalsIgnoreCase(itemName.trim())) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
     public void addPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
     }
@@ -120,13 +119,6 @@ public class Room {
         return puzzle;
     }
 
-    public void resetPuzzle() {
-        if (puzzle != null) {
-            puzzle.resetPuzzle();
-        }
-    }
-
-    // ======================== // MONSTER METHODS (NEW) ========================
     public void setMonster(Monster monster) {
         this.monster = monster;
     }

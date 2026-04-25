@@ -15,4 +15,4 @@ M_3|Butterfly|A special pure soul killed by the old master of the mansion. It re
 M_4|Ghost|Vengeful old souls killed by the old master of the mansion. They wander the mansion holding a grudge.|false|100|20|random|any
 M_5|Ghoul|The workers of the old master of the mansion. They fiercely guard special rooms.|false|120|20|special|R_12
 M_6|Butler|The loyal keeper of the mansion is a benevolent remnant soul.|false|1|0|fixed|R_11
-M_7|Specter|The old master of the mansion. The boss monster forever bound to the last room.|false|300|10|fixed|R_20
+M_7|Specter|The old master of the mansion. The boss monster forever bound to the Master Bedroom.|false|300|10|fixed|R_22

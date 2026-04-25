@@ -18,13 +18,10 @@ public class Player {
     public Player(String startingRoomId) {
         this.currentRoomId = startingRoomId;
         this.previousRoomId = startingRoomId;
-
         this.maxHealth = 100;
         this.health = 100;
         this.playerScore = 100;
-
         this.inventory = new ArrayList<>();
-
         this.equippedWeapon = null;
         this.equippedArmor = null;
     }
@@ -72,24 +69,16 @@ public class Player {
         setHealth(health - amount);
     }
 
-    public void heal(int amount) {
-        setHealth(health + amount);
-    }
-
-    public void decreaseScore(int amount) {
-        playerScore -= amount;
-
-        if (playerScore < 0) {
-            playerScore = 0;
-        }
-    }
-
     public boolean isAlive() {
         return health > 0;
     }
 
     public List<Item> getInventory() {
         return inventory;
+    }
+
+    public boolean hasItem(String itemName) {
+        return findItemInInventory(itemName) != null;
     }
 
     public void addItem(Item item) {
@@ -103,29 +92,14 @@ public class Player {
     }
 
     public Item findItemInInventory(String itemName) {
-        if (itemName == null) {
-            return null;
-        }
+        if (itemName == null) return null;
 
         for (Item item : inventory) {
             if (item.getName().equalsIgnoreCase(itemName.trim())) {
                 return item;
             }
         }
-
         return null;
-    }
-
-    public boolean hasItem(String itemName) {
-        return findItemInInventory(itemName) != null;
-    }
-
-    public Item getEquippedWeapon() {
-        return equippedWeapon;
-    }
-
-    public Item getEquippedArmor() {
-        return equippedArmor;
     }
 
     public GameResult move(String direction, Room currentRoom) {
@@ -140,8 +114,7 @@ public class Player {
         }
 
         setCurrentRoomId(nextRoomId);
-
-        return new GameResult("You moved " + direction + ".", true, false);
+        return new GameResult("Moved.", true, false);
     }
 
     public GameResult pickupItem(String itemName, Room room) {
@@ -150,18 +123,17 @@ public class Player {
         }
 
         if (itemName == null || itemName.trim().isEmpty()) {
-            return new GameResult("You must specify an item to pick up.", false, false);
+            return new GameResult("Specify an item. Example: pickup Silver Cog", false, false);
         }
 
         Item item = room.removeItemByName(itemName);
 
         if (item == null) {
-            return new GameResult("Item not found.", false, false);
+            return new GameResult("Item not found. Try 'explore' to see items in the room.", false, false);
         }
 
         addItem(item);
-
-        return new GameResult("You picked up " + item.getName() + ".", false, false);
+        return new GameResult(item.getName() + " was added to your inventory.", false, false);
     }
 
     public GameResult dropItem(String itemName, Room room) {
@@ -178,37 +150,28 @@ public class Player {
         removeItem(item);
         room.addItem(item);
 
-        if (equippedWeapon == item) {
-            equippedWeapon = null;
-        }
-
-        if (equippedArmor == item) {
-            equippedArmor = null;
-        }
+        if (equippedWeapon == item) equippedWeapon = null;
+        if (equippedArmor == item) equippedArmor = null;
 
         return new GameResult("You dropped " + item.getName() + ".", false, false);
     }
 
     public GameResult inspectItem(String itemName, Room room) {
         if (itemName == null || itemName.trim().isEmpty()) {
-            return new GameResult("You must specify what to inspect.", false, false);
+            return new GameResult("Specify what to inspect. Example: inspect Silver Cog", false, false);
         }
 
-        Item inventoryItem = findItemInInventory(itemName);
+        Item item = findItemInInventory(itemName);
 
-        if (inventoryItem != null) {
-            return new GameResult(inventoryItem.getDescription(), false, false);
+        if (item == null && room != null) {
+            item = room.findItemByName(itemName);
         }
 
-        if (room != null) {
-            for (Item item : room.getItems()) {
-                if (item.getName().equalsIgnoreCase(itemName.trim())) {
-                    return new GameResult(item.getDescription(), false, false);
-                }
-            }
+        if (item == null) {
+            return new GameResult("That item could not be found.", false, false);
         }
 
-        return new GameResult("That item could not be found.", false, false);
+        return new GameResult(item.getDescription(), false, false);
     }
 
     public GameResult getInventoryResult() {
@@ -220,11 +183,9 @@ public class Player {
 
         for (Item item : inventory) {
             sb.append("- ").append(item.getName());
-
             if (item == equippedWeapon || item == equippedArmor) {
                 sb.append(" (equipped)");
             }
-
             sb.append("\n");
         }
 
@@ -259,19 +220,28 @@ public class Player {
         }
 
         if (item.isConsumable()) {
-            health += item.getHealthEffect();
+            int effect = item.getHealthEffect();
 
-            if (health > maxHealth) {
-                health = maxHealth;
+            if (effect >= 0) {
+                health += effect;
+            } else {
+                health -= Math.abs(effect);
             }
 
-            if (item.getHealthEffect() < 0) {
-                health -= item.getHealthEffect();
-            }
+            if (health > maxHealth) health = maxHealth;
+            if (health < 0) health = 0;
 
             removeItem(item);
 
+            if (health == 0) {
+                return new GameResult(item.getName() + " used. Your health reached 0. Game over.", false, false, true);
+            }
+
             return new GameResult(item.getName() + " used. Health: " + health + "/" + maxHealth, false, false);
+        }
+
+        if (item.isUtility()) {
+            return new GameResult("You used " + item.getName() + ".", false, false);
         }
 
         return new GameResult("That item cannot be used right now.", false, false);
@@ -282,7 +252,7 @@ public class Player {
             return new GameResult("There is no puzzle here.", false, false);
         }
 
-        return new GameResult("Puzzle available.", false, true);
+        return new GameResult("Puzzle mode started.", false, true);
     }
 
     public GameResult solvePuzzle(String answer, Room room) {
@@ -293,7 +263,7 @@ public class Player {
         Puzzle puzzle = room.getPuzzle();
 
         if (answer == null || answer.trim().isEmpty()) {
-            return new GameResult("You must enter an answer.", false, true);
+            return new GameResult("Submit an answer with: solve <answer>", false, true);
         }
 
         boolean correct = puzzle.attemptAnswer(answer.trim());
@@ -303,17 +273,17 @@ public class Player {
         }
 
         takeDamage(5);
-
         playerScore -= puzzle.getWrongAttempt();
+        if (playerScore < 0) playerScore = 0;
 
-        if (playerScore < 0) {
-            playerScore = 0;
+        if (!isAlive()) {
+            return new GameResult("Your health reached 0. Game over.", false, false, true);
         }
 
         if (puzzle.isFailed()) {
             puzzle.resetPuzzle();
             returnToPreviousRoom();
-            return new GameResult("Wrong! You failed the puzzle, lost 5 HP, lost score, and were sent back.", true, false);
+            return new GameResult("Puzzle failed. You lost 5 HP and were sent back.", false, false);
         }
 
         return new GameResult("Incorrect. You lost 5 HP. Attempts left: " + puzzle.getRemainingAttempts(), false, true);
@@ -327,7 +297,6 @@ public class Player {
         Monster monster = room.getMonster();
 
         int damage = 5;
-
         if (equippedWeapon != null) {
             damage += equippedWeapon.getStatValue();
         }
@@ -335,23 +304,55 @@ public class Player {
         monster.takeDamage(damage);
 
         if (monster.isDefeated()) {
-            return new GameResult("You defeated the " + monster.getName() + ".", true, false);
+            if (monster.getName().equalsIgnoreCase("Specter")) {
+                addItem(new Item("A_21", "Final Key", "utility", "A majestic key covered with jewels. Unlocks the Master Safe Room.", 0));
+            }
+            return new GameResult("You defeated the " + monster.getName() + ".", false, false);
         }
 
         int incomingDamage = monster.getDamage();
-
         if (equippedArmor != null) {
             incomingDamage = Math.max(0, incomingDamage - equippedArmor.getStatValue());
         }
 
         takeDamage(incomingDamage);
 
+        if (!isAlive()) {
+            return new GameResult("The " + monster.getName() + " defeated you. Game over.", false, false, true);
+        }
+
         return new GameResult(
                 "You hit the " + monster.getName() + " for " + damage + " damage.\n" +
                         "The " + monster.getName() + " hit you for " + incomingDamage + " damage.\n" +
-                        "HP: " + health + "/" + maxHealth,
+                        "Available commands: attack, defend, flee",
                 false,
                 false
         );
+    }
+
+    public GameResult defend(Room room) {
+        if (room == null || !room.hasMonster()) {
+            return new GameResult("There is no monster to defend against.", false, false);
+        }
+
+        Monster monster = room.getMonster();
+        int incomingDamage = Math.max(0, monster.getDamage() / 2);
+
+        takeDamage(incomingDamage);
+
+        if (!isAlive()) {
+            return new GameResult("You defended, but your health reached 0. Game over.", false, false, true);
+        }
+
+        return new GameResult("You defend against the " + monster.getName() + ". Damage reduced to " + incomingDamage + ".", false, false);
+    }
+
+    public GameResult flee(Room room) {
+        if (room == null || !room.hasMonster()) {
+            return new GameResult("There is nothing to flee from.", false, false);
+        }
+
+        returnToPreviousRoom();
+        return new GameResult("You fled back to the previous room.", false, false);
     }
 }
