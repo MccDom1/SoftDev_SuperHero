@@ -19,7 +19,12 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Game started. Type a command (or 'quit'):");
+        System.out.println("You wake to silence. The mansion is unfamiliar; "
+        		+ "closed doors and eerie halls hiding endless secrets.\n"
+        		+ "Somewhere inside are the tools you'll need to escape... "
+        		+ "and many dangers lurking in the shadows.\n"
+        		+ "Explore carefully. Solve what you can. Survive what you must.\n"
+        		+ "Type 'help' for a list of commands.");
 
         // ======================== // GAME LOOP // ========================
         while (true) {
