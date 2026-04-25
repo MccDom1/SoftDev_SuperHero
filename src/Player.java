@@ -8,6 +8,7 @@ public class Player {
 
     private int health;
     private int maxHealth;
+    private int playerScore;
 
     private List<Item> inventory;
 
@@ -17,9 +18,13 @@ public class Player {
     public Player(String startingRoomId) {
         this.currentRoomId = startingRoomId;
         this.previousRoomId = startingRoomId;
+
         this.maxHealth = 100;
         this.health = 100;
+        this.playerScore = 100;
+
         this.inventory = new ArrayList<>();
+
         this.equippedWeapon = null;
         this.equippedArmor = null;
     }
@@ -38,11 +43,19 @@ public class Player {
     }
 
     public void returnToPreviousRoom() {
-        this.currentRoomId = this.previousRoomId;
+        this.currentRoomId = previousRoomId;
     }
 
     public int getHealth() {
         return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getPlayerScore() {
+        return playerScore;
     }
 
     public void setHealth(int health) {
@@ -55,12 +68,20 @@ public class Player {
         }
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
     public void takeDamage(int amount) {
         setHealth(health - amount);
+    }
+
+    public void heal(int amount) {
+        setHealth(health + amount);
+    }
+
+    public void decreaseScore(int amount) {
+        playerScore -= amount;
+
+        if (playerScore < 0) {
+            playerScore = 0;
+        }
     }
 
     public boolean isAlive() {
@@ -107,8 +128,6 @@ public class Player {
         return equippedArmor;
     }
 
-    // ======================== PLAYER ACTION METHODS ========================
-
     public GameResult move(String direction, Room currentRoom) {
         if (currentRoom == null) {
             return new GameResult("Current room is invalid.", false, false);
@@ -117,12 +136,12 @@ public class Player {
         String nextRoomId = currentRoom.getExit(direction);
 
         if (nextRoomId == null) {
-            return new GameResult("You can't go that way.", true, false);
+            return new GameResult("You can't go that way.", false, false);
         }
 
         setCurrentRoomId(nextRoomId);
 
-        return new GameResult("You move " + direction + ".", true, false);
+        return new GameResult("You moved " + direction + ".", true, false);
     }
 
     public GameResult pickupItem(String itemName, Room room) {
@@ -240,8 +259,18 @@ public class Player {
         }
 
         if (item.isConsumable()) {
-            setHealth(health + item.getStatValue());
+            health += item.getHealthEffect();
+
+            if (health > maxHealth) {
+                health = maxHealth;
+            }
+
+            if (item.getHealthEffect() < 0) {
+                health -= item.getHealthEffect();
+            }
+
             removeItem(item);
+
             return new GameResult(item.getName() + " used. Health: " + health + "/" + maxHealth, false, false);
         }
 
@@ -275,10 +304,16 @@ public class Player {
 
         takeDamage(5);
 
+        playerScore -= puzzle.getWrongAttempt();
+
+        if (playerScore < 0) {
+            playerScore = 0;
+        }
+
         if (puzzle.isFailed()) {
             puzzle.resetPuzzle();
             returnToPreviousRoom();
-            return new GameResult("Wrong! You failed the puzzle, lost 5 HP, and were sent back.", true, false);
+            return new GameResult("Wrong! You failed the puzzle, lost 5 HP, lost score, and were sent back.", true, false);
         }
 
         return new GameResult("Incorrect. You lost 5 HP. Attempts left: " + puzzle.getRemainingAttempts(), false, true);

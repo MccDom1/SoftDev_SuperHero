@@ -1,37 +1,42 @@
 public class GameView {
 
-    // ======================== // DISPLAY RESULT // ========================
     public void display(GameResult result, GameModel model) {
 
-        // Print main message
+        // Always print main message
         System.out.println(result.getMessage());
 
-        // Show room if needed
+        // Show room ONLY when needed
         if (result.shouldShowRoom()) {
+
             Room room = model.getCurrentRoom();
 
-            System.out.println("\n" + room.getRoomName());
-            System.out.println(room.getRoomDesc());
+            if (room != null) {
+                System.out.println("\n" + room.getRoomName());
+                System.out.println(room.getRoomDesc());
 
-            // Show items in room
-            if (!room.getItems().isEmpty()) {
-                System.out.println("\nItems here:");
-                for (Item item : room.getItems()) {
-                    System.out.println("- " + item.getName());
+                if (!room.getItems().isEmpty()) {
+                    System.out.println("\nItems here:");
+                    for (Item item : room.getItems()) {
+                        System.out.println("- " + item.getName());
+                    }
                 }
-            }
 
-            // Show puzzle hint
-            if (room.hasPuzzle()) {
-                System.out.println("\nThere is a puzzle here.");
+                // 🔥 FIX: only show that puzzle EXISTS
+                if (room.hasPuzzle()) {
+                    System.out.println("\nThere is a puzzle here. Type 'interact puzzle' to inspect it.");
+                }
+
+                if (room.hasMonster()) {
+                    System.out.println("\nMonster here: " + room.getMonster().getName());
+                }
             }
         }
 
-        // Show puzzle prompt if needed
+
         if (result.shouldShowPuzzle()) {
             Room room = model.getCurrentRoom();
 
-            if (room.hasPuzzle()) {
+            if (room != null && room.hasPuzzle()) {
                 Puzzle puzzle = room.getPuzzle();
 
                 System.out.println("\nPuzzle:");

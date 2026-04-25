@@ -37,6 +37,9 @@ public class GameController {
             case "west":
                 return model.movePlayer("west");
 
+            case "explore":
+                return model.exploreRoom();
+
             case "pickup":
             case "take":
                 return model.pickupItem(argument);
@@ -45,6 +48,9 @@ public class GameController {
                 return model.dropItem(argument);
 
             case "inspect":
+                if (argument.equalsIgnoreCase("monster")) {
+                    return model.inspectMonster();
+                }
                 return model.inspectItem(argument);
 
             case "use":
@@ -59,8 +65,8 @@ public class GameController {
                 }
                 return new GameResult("Invalid interact command.", false, false);
 
-            case "answer":
             case "solve":
+            case "answer":
                 return model.attemptPuzzle(argument);
 
             case "attack":
@@ -74,7 +80,7 @@ public class GameController {
 
             case "help":
                 return new GameResult(
-                        "Commands: north, south, east, west, pickup <item>, drop <item>, inspect <item>, use <item>, equip <item>, interact puzzle, solve <answer>, attack, inventory, status, quit",
+                        "Commands: n s e w, explore, pickup <item>, drop <item>, inspect <item>, inspect monster, use <item>, equip <item>, interact puzzle, solve <answer>, attack, inventory, status, quit",
                         false,
                         false
                 );

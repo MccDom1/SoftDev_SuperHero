@@ -31,24 +31,27 @@ public class GameModel {
     public GameResult movePlayer(String direction) {
         GameResult result = player.move(direction, getCurrentRoom());
 
+        if (!result.shouldShowRoom()) {
+            return result;
+        }
+
         Room newRoom = getCurrentRoom();
 
         if (newRoom == null) {
-            return new GameResult("Room could not be found.", false, false);
+            return new GameResult("Room not found.", false, false);
         }
 
-        boolean visitedBefore = newRoom.isVisited();
         newRoom.setVisited(true);
 
-        String message;
+        return new GameResult(
+                "You moved " + direction + ".",
+                true,
+                false
+        );
+    }
 
-        if (visitedBefore) {
-            message = "You return to " + newRoom.getRoomName() + ".";
-        } else {
-            message = newRoom.getRoomName() + "\n" + newRoom.getRoomDesc();
-        }
-
-        return new GameResult(message, true, newRoom.hasPuzzle());
+    public GameResult exploreRoom() {
+        return new GameResult("You look around the room.", true, false);
     }
 
     public GameResult pickupItem(String itemName) {
@@ -61,6 +64,24 @@ public class GameModel {
 
     public GameResult inspectItem(String itemName) {
         return player.inspectItem(itemName, getCurrentRoom());
+    }
+
+    public GameResult inspectMonster() {
+        Room room = getCurrentRoom();
+
+        if (room == null || !room.hasMonster()) {
+            return new GameResult("There is no monster here.", false, false);
+        }
+
+        Monster monster = room.getMonster();
+
+        return new GameResult(
+                monster.getName() + "\n" +
+                        monster.getDescription() + "\n" +
+                        "HP: " + monster.getHealth(),
+                false,
+                false
+        );
     }
 
     public GameResult useItem(String itemName) {
@@ -89,14 +110,10 @@ public class GameModel {
 
     public GameResult getStatus() {
         return new GameResult(
-                "Health: " + player.getHealth() + "/" + player.getMaxHealth() +
-                        "\nCurrent Room: " + player.getCurrentRoomId(),
+                "Health: " + player.getHealth() +
+                        "\nScore: " + player.getPlayerScore(),
                 false,
                 false
         );
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 }

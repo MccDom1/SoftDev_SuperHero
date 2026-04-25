@@ -1,6 +1,5 @@
 public class Item {
 
-    // ======================== // VARIABLES // ========================
     private final String id;
     private final String name;
     private final String type;
@@ -10,7 +9,6 @@ public class Item {
     private boolean consumable;
     private boolean equippable;
 
-    // ======================== // CONSTRUCTOR // ========================
     public Item(String id, String name, String type, String description, int statValue) {
         this.id = id;
         this.name = name;
@@ -18,36 +16,27 @@ public class Item {
         this.description = description;
         this.statValue = statValue;
 
-        // ======================== // TYPE LOGIC // ========================
         if (type.equalsIgnoreCase("consumable")) {
             this.consumable = true;
             this.equippable = false;
-        }
-        else if (type.equalsIgnoreCase("weapon") || type.equalsIgnoreCase("equipment")) {
+        } else if (type.equalsIgnoreCase("weapon") || type.equalsIgnoreCase("equipment")) {
             this.consumable = false;
             this.equippable = true;
-        }
-        else {
-            // utility items (keys, puzzle rewards, etc.)
+        } else {
             this.consumable = false;
             this.equippable = false;
         }
     }
 
-    // ======================== // GETTERS // ========================
     public String getId() { return id; }
     public String getName() { return name; }
     public String getType() { return type; }
     public String getDescription() { return description; }
-
-    public int getStatValue() {
-        return statValue;
-    }
+    public int getStatValue() { return statValue; }
 
     public boolean isConsumable() { return consumable; }
     public boolean isEquippable() { return equippable; }
 
-    // ======================== // TYPE HELPERS // ========================
     public boolean isWeapon() {
         return type.equalsIgnoreCase("weapon");
     }
@@ -60,7 +49,13 @@ public class Item {
         return type.equalsIgnoreCase("utility");
     }
 
-    // ======================== // DISPLAY // ========================
+    public int getHealthEffect() {
+        if (isConsumable()) {
+            return statValue;
+        }
+        return 0;
+    }
+
     @Override
     public String toString() {
         return name;
