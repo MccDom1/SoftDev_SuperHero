@@ -1,25 +1,24 @@
 roomID, roomName, roomDescription, north, south, east, west
 
-R_1, Front Foyer, A wide marble entryway that's too clean compared to the rest of the house A tall cracked mirror leans against the wall and the air smells like old cologne and wet stone A coat rack stands near the door with one coat still hanging, 2,7,3,4
-R_2, Grand Staircase, A sweeping staircase splits left and right The steps creak at different pitches and old family portraits line the walls Most faces are normal but one has their eyes scratched out, 15,1,0,0
-R_3, Parlor, Chairs sit around an empty fireplace like people were in a conversation but never returned The wallpaper is faded and peeling The fireplace is cold but there is still ash inside, 0,0,0,1
-R_4, Library, Floor to ceiling bookshelves cover a huge room with ladders on rails The air is thick and dry and dust scatters with every step Some books look newer and one shelf has three brightly colored books, 5,0,1,0
-R_5, Secret Passage, A section of a shelf swings inward revealing a narrow passage The walls have scratch marks and the air is cold with faint sounds through the walls, 6,4,0,0
-R_6, Study, A massive desk sits in the center with scattered pages The fireplace smells faintly of smoke and a chair lies on the ground A ghoul stands behind the desk, 0,5,0,0
-R_7, Dining Main Hall, A long table is set with plates covered in dust as if dinner was never served Tall candlesticks sit melted in the center, 1,10,8,9
-R_8, Ballroom, A wide ballroom with a polished floor marked with scratches and scattered glass A cracked mirror reflects you in pieces and a grand piano sits nearby, 0,0,0,7
-R_9, Conservatory, Dead vines cover broken planters and glass crunches underfoot Moonlight shines through the ceiling A single plant remains alive and the soil looks disturbed, 0,0,7,0
-R_10, Kitchen, Rusty pans hang above a large island and the room smells like herbs and spices A recipe book sits open and a pot simmers on the stove missing a final ingredient, 7,0,11,12
-R_11, Butlers Pantry, Shelves of glassware line the walls reflecting your movement A silver tray rests on the counter and cleaning supplies sit nearby The butler stands quietly watching, 0,0,0,10
-R_12, Basement, Pipes drip cold water onto the stone floor and a rusted boiler hisses The air is damp and a ghoul lurks in the shadows guarding something, 0,13,10,14
-R_15, Landing Hallway, Stairs end at a wide landing overlooking the foyer A long hallway stretches into darkness and doors line the walls, 19,2,18,16
-R_14, Underground Chapel, A hidden chapel beneath the mansion with an altar and melted candles The walls are covered in faded symbols and a locked box sits nearby, 0,0,12,0
-R_15, Landing Hallway, Stairs end at a wide landing overlooking the foyer A long hallway stretches into darkness and doors line the walls, 19,2,18,16
-R_16, Nursery, A crib creaks gently and toys are scattered A music box plays an odd tune and the wallpaper shows faded animal drawings, 0,0,15,0
-R_17, Bathroom, A once beautiful bathroom now covered in webs with a shattered mirror A bathtub filled with dark water sits in the room, 0,0,0,18
-R_18, Guest Room, A dusty bed sits in the room and the closet is locked Suitcases lie open on the floor as if someone tried to leave, 0,23,17,15
-R_19, Hallway, A long hallway with doors leading to the attic and a broom closet The space feels narrow and quiet, 22,15,21,20
-R_20, Attic, The attic is filled with old furniture and trunks covered in dust A rocking chair moves slowly and light shines through a boarded window, 0,0,19,0
-R_21, Broom Closet, A cramped broom closet filled with dust cleaning supplies and old tools A small silver cog glints on a shelf, 0,0,0,19
-R_22, Master Bedroom, The master bedroom is cold and heavy with silence The specter waits near the center of the room guarding the final secret of the mansion, 0,19,0,0
-R_23, Closet, A small locked closet connected to the guest room Old boxes are stacked inside and something dangerous is hidden among them, 18,0,0,0
+R_1, Front Foyer, A wide marble entryway that's too clean compared to the rest of the house. A tall cracked mirror leans against the wall and the air smells like old cologne and wet stone. A coat rack stands near the door with one coat still hanging., 2,7,3,4
+R_2, Grand Staircase, A sweeping staircase splits left and right. The steps creak at different pitches and old family portraits line the walls. Most faces are normal but one has their eyes scratched out., 15,1,0,0
+R_3, Parlor, Chairs sit around an empty fireplace like people were in a conversation but never returned. The wallpaper is faded and peeling. The fireplace is cold but there is still ash inside., 0,0,0,1
+R_4, Library, Floor to ceiling bookshelves cover a huge room with ladders on rails. The air is thick and dry and dust scatters with every step. Some books look newer and one shelf has three brightly colored books., 5,0,1,0
+R_5, Secret Passage, A section of a shelf swings inward revealing a narrow passage. The walls have scratch marks and the air is cold with faint sounds through the walls., 6,4,0,0
+R_6, Study, A massive desk sits in the center with scattered pages. The fireplace smells faintly of smoke and a chair lies on the ground. A ghoul stands behind the desk., 0,5,0,0
+R_7, Dining Main Hall, A long table is set with plates covered in dust as if dinner was never served. Tall candlesticks sit melted in the center., 1,10,8,9
+R_8, Ballroom, A wide ballroom with a polished floor marked with scratches and scattered glass. A cracked mirror reflects you in pieces and a grand piano sits nearby., 0,0,0,7
+R_9, Conservatory, Dead vines cover broken planters and glass crunches underfoot. Moonlight shines through the ceiling. A single plant remains alive and the soil looks disturbed., 0,0,7,0
+R_10, Kitchen, Rusty pans hang above a large island and the room smells like herbs and spices. A recipe book sits open and a pot simmers on the stove missing a final ingredient., 7,0,11,12
+R_11, Butler's Pantry, Shelves of glassware line the walls reflecting your movement. A silver tray rests on the counter and cleaning supplies sit nearby. The butler stands quietly watching., 0,0,0,10
+R_12, Basement, Pipes drip cold water onto the stone floor and a rusted boiler hisses. The air is damp and a ghoul lurks in the shadows guarding something., 0,13,10,14
+R_14, Underground Chapel, A hidden chapel beneath the mansion with an altar and melted candles. The walls are covered in faded symbols and a locked box sits nearby., 0,0,12,0
+R_15, Landing Hallway, Stairs end at a wide landing overlooking the foyer. A long hallway stretches into darkness and doors line the walls., 19,2,18,16
+R_16, Nursery, A crib creaks gently and toys are scattered. A music box plays an odd tune and the wallpaper shows faded animal drawings., 0,0,15,0
+R_17, Bathroom, A once beautiful bathroom now covered in webs with a shattered mirror. A bathtub filled with dark water sits in the room., 0,0,0,18
+R_18, Guest Room, A dusty bed sits in the room and the closet is locked. Suitcases lie open on the floor as if someone tried to leave., 0,23,17,15
+R_19, Hallway, A long hallway with doors leading to the attic and a broom closet. The space feels narrow and quiet., 22,15,21,20
+R_20, Attic, The attic is filled with old furniture and trunks covered in dust. A rocking chair moves slowly and light shines through a boarded window., 0,0,19,0
+R_21, Broom Closet, A cramped broom closet filled with cleaning supplies and old tools. A small silver cog glints on a shelf., 0,0,0,19
+R_22, Master Bedroom, The master bedroom is cold and heavy with silence. The specter waits near the center of the room guarding the final secret of the mansion., 0,19,0,0
+R_23, Closet, A small locked closet connected to the guest room. Old boxes are stacked inside and something dangerous is hidden among them., 18,0,0,0
