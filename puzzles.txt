@@ -1,6 +1,6 @@
 puzzleID | puzzleName | puzzleDescription | puzzleSolution | numAttempts | isSolved | puzzleOutcome | roomName | roomID
 
-PZ01 | The Scholar's Sequence | Three brightly colored books Red Yellow Blue sit out of place on a shelf. Put the books in the correct order to reveal a hidden mechanism. | Red Yellow Blue | 3 | false | Access to Secret Passage | Library | R_4
+PZ01 | The Scholar's Sequence | Three brightly colored books - Red, Yellow, Blue - sit out of place on a shelf. Put the books in the correct order to reveal a hidden mechanism. | Red Yellow Blue | 3 | false | Access to Secret Passage | Library | R_4
 
 PZ02 | The Broken Lullaby | A music box plays an odd discordant tune. A gear is missing from its mechanism. | Silver Cog | 3 | false | Item Dropped: Silver Cog = Health +15 | Nursery | R_16
 
