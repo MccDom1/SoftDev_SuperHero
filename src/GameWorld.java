@@ -16,7 +16,7 @@ public class GameWorld {
         try (Scanner scan = new Scanner(new File(fileName))) {
 
             while (scan.hasNextLine()) {
-                String line = scan.nextLine();
+                String line = scan.nextLine().trim();
 
                 if (line.equals("") || line.startsWith("roomID")) {
                     continue;
@@ -50,12 +50,12 @@ public class GameWorld {
         }
     }
 
-    // ======================== // ITEM LOADING + ASSIGNMENT // ========================
+    // ======================== // ITEM LOADING // ========================
     public void loadItems(String fileName) {
         try (Scanner scan = new Scanner(new File(fileName))) {
 
             while (scan.hasNextLine()) {
-                String line = scan.nextLine();
+                String line = scan.nextLine().trim();
 
                 if (line.equals("") || line.startsWith("itemId")) continue;
 
@@ -73,11 +73,11 @@ public class GameWorld {
                 Item item = new Item(itemID, itemName, itemType, itemDesc, statValue);
                 itemList.add(item);
 
-// assign item to room
                 Room room = roomMap.get(roomID);
                 if (room != null) {
                     room.addItem(item);
                 }
+
             }
 
         } catch (Exception e) {
@@ -85,12 +85,12 @@ public class GameWorld {
         }
     }
 
-    // ======================== // PUZZLE LOADING + ASSIGNMENT // ========================
+    // ======================== // PUZZLE LOADING // ========================
     public void loadPuzzles(String fileName) {
         try (Scanner scan = new Scanner(new File(fileName))) {
 
             while (scan.hasNextLine()) {
-                String line = scan.nextLine();
+                String line = scan.nextLine().trim();
 
                 if (line.equals("") || line.startsWith("puzzleID")) continue;
 
@@ -123,6 +123,7 @@ public class GameWorld {
                 if (room != null) {
                     room.addPuzzle(puzzle);
                 }
+
             }
 
         } catch (Exception e) {
@@ -130,7 +131,7 @@ public class GameWorld {
         }
     }
 
-    // ======================== // MONSTER LOADING + ASSIGNMENT // ========================
+    // ======================== // MONSTER LOADING (FIXED) ========================
     public void loadMonsters(String fileName) {
         try (Scanner scan = new Scanner(new File(fileName))) {
 
@@ -139,7 +140,8 @@ public class GameWorld {
 
                 if (line.equals("") || line.startsWith("monsterId")) continue;
 
-                String[] parts = line.split(",");
+                // ✅ FIX: use | instead of comma
+                String[] parts = line.split("\\|");
 
                 if (parts.length < 8) continue;
 
@@ -152,18 +154,34 @@ public class GameWorld {
                 String spawnType = parts[6].trim();
                 String roomID = parts[7].trim();
 
-// FIXED: roomID should be String
+                int roomNumber = -1;
+
+                if (!roomID.equalsIgnoreCase("any")) {
+                    roomNumber = Integer.parseInt(roomID.replace("R_", "").trim());
+                }
+
                 Monster monster = new Monster(
                         monsterID,
                         monsterName,
                         monsterDesc,
-                        Integer.parseInt(roomID.replace("R_", "")),
+                        roomNumber,
                         health,
                         attack,
                         spawnType.equalsIgnoreCase("hostile")
                 );
 
+                if (isDead) {
+                    monster.takeDamage(health);
+                }
+
                 monsterList.add(monster);
+
+                if (!roomID.equalsIgnoreCase("any")) {
+                    Room room = roomMap.get(roomID);
+                    if (room != null) {
+                        room.setMonster(monster);
+                    }
+                }
             }
 
         } catch (Exception e) {
@@ -174,5 +192,17 @@ public class GameWorld {
     // ======================== // GETTERS // ========================
     public HashMap<String, Room> getRoomMap() {
         return roomMap;
+    }
+
+    public ArrayList<Item> getItemList() {
+        return itemList;
+    }
+
+    public ArrayList<Puzzle> getPuzzleList() {
+        return puzzleList;
+    }
+
+    public ArrayList<Monster> getMonsterList() {
+        return monsterList;
     }
 }

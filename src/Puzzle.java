@@ -1,93 +1,84 @@
 public class Puzzle {
 
-    private String puzzleId;
+    // ======================== // VARIABLES // ========================
+    private String puzzleID;
     private String puzzleName;
-    private String roomId;
-    private String roomName;
-    private String description;
-    private String solution;
-    private int maxAttempts;
-    private int attemptsUsed;
+    private String puzzleDesc;
+    private String puzzleSolution;
+    private int numAttempts;
+    private int remainingAttempts;
+    private int wrongAttempts;
+
     private boolean solved;
-    private boolean active;
-    private String reward;
-    private String successMessage;
-    private String failMessage;
+    private boolean failed;
 
-    public Puzzle(String puzzleId, String puzzleName, String roomId, String roomName, String description,
-                  String solution, int maxAttempts, String reward,
-                  String successMessage, String failMessage) {
-        this.puzzleId = puzzleId;
+    // puzzle outcome message
+    private String outcome;
+
+    // ======================== // CONSTRUCTOR // ========================
+    public Puzzle(String puzzleID, String puzzleName, String puzzleDesc,
+                  String puzzleSolution, int numAttempts,
+                  boolean isSolved, String outcome)
+    {
+        this.puzzleID = puzzleID;
         this.puzzleName = puzzleName;
-        this.roomId = roomId;
-        this.roomName = roomName;
-        this.description = description;
-        this.solution = solution;
-        this.maxAttempts = maxAttempts;
-        this.attemptsUsed = 0;
-        this.solved = false;
-        this.active = true;
-        this.reward = reward;
-        this.successMessage = successMessage;
-        this.failMessage = failMessage;
+        this.puzzleDesc = puzzleDesc;
+        this.puzzleSolution = puzzleSolution;
+        this.numAttempts = numAttempts;
+        this.remainingAttempts = numAttempts;
+        this.wrongAttempts = 0;
+        this.solved = isSolved;
+        this.failed = false;
+        this.outcome = outcome;
     }
 
-    // ======================== // CONSTRUCTOR OVERLOAD FOR MAP DATA // ========================
-    public Puzzle(String puzzleId, String puzzleName, String description, String solution,
-                  int maxAttempts, boolean solved, String outcome) {
-        this(puzzleId, puzzleName, "", "", description, solution, maxAttempts,
-                outcome, outcome, "Puzzle failed. Try again.");
-        this.solved = solved;
-        this.active = !solved;
-    }
-
-    public String getPuzzleId() { return puzzleId; }
+    // ======================== // GETTERS // ========================
+    public String getPuzzleID() { return puzzleID; }
     public String getPuzzleName() { return puzzleName; }
-    public String getRoomId() { return roomId; }
-    public String getRoomName() { return roomName; }
-    public String getDescription() { return description; }
-    public String getReward() { return reward; }
-    public String getSuccessMessage() { return successMessage; }
-    public String getFailMessage() { return failMessage; }
-    public int getAttemptsUsed() { return attemptsUsed; }
-    public int getRemainingAttempts() { return maxAttempts - attemptsUsed; }
+    public String getDescription() { return puzzleDesc; }
+    public String getSolution() { return puzzleSolution; }
+
+    public int getRemainingAttempts() { return remainingAttempts; }
+    public int getWrongAttempts() { return wrongAttempts; }
+
     public boolean isSolved() { return solved; }
-    public boolean isActive() { return active; }
+    public boolean isFailed() { return failed; }
 
-    public boolean hasAttemptsRemaining() {
-        return attemptsUsed < maxAttempts;
-    }
+    public String getOutcome() { return outcome; }
 
-    public boolean checkAnswer(String answer) {
-        if (!active || solved || !hasAttemptsRemaining()) {
+    // ======================== // ATTEMPT LOGIC // ========================
+    public boolean attemptAnswer(String answer)
+    {
+        if (solved || failed)
+        {
             return false;
         }
 
-        attemptsUsed++;
-
-        String normalizedInput = answer.trim();
-        String normalizedSolution = solution.trim();
-
-        if (normalizedSolution.equalsIgnoreCase(normalizedInput)) {
+        // correct answer
+        if (answer.equalsIgnoreCase(puzzleSolution))
+        {
             solved = true;
-            active = false;
             return true;
+        }
+
+        // wrong answer
+        remainingAttempts--;
+        wrongAttempts++;
+
+        if (remainingAttempts <= 0)
+        {
+            failed = true;
         }
 
         return false;
     }
 
-    public boolean isFailed() {
-        return !solved && attemptsUsed >= maxAttempts;
-    }
-
-    public void resetPuzzle() {
-        attemptsUsed = 0;
-        solved = false;
-        active = true;
-    }
-
-    public void deactivatePuzzle() {
-        active = false;
+    // ======================== // RESET PUZZLE // ========================
+    public void resetPuzzle()
+    {
+        this.remainingAttempts = this.numAttempts;
+        this.wrongAttempts = 0;
+        this.failed = false;
+        this.solved = false;
     }
 }

@@ -11,3 +11,4 @@ M_1 | Leather Armor | 0.5 | any
 M_4 | Ghost Key | 75 | any
 M_4 | Plate Helmet | 8 | any
 M_4 | Attack Potion | 7 | any
+

@@ -1,55 +1,20 @@
-/**
- * Player Class
- *
- * PURPOSE:
- * Represents the player's state throughout the game. This includes location,
- * health, inventory, equipped items, and active puzzle interaction.
- *
- * DESIGN:
- * - Stores only player-related data (no game logic decisions)
- * - Keeps track of movement, combat readiness, and inventory management
- * - Designed to be updated by GameModel rather than controlling the game itself
- *
- * NOTE:
- * This class focuses on state management, allowing other parts of the system
- * (like GameModel) to handle gameplay rules and interactions.
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
 
-    // Tracks the current room the player is in
-    private int currentRoomId;
+    private String currentRoomId;
+    private String previousRoomId;
 
-    // Stores the previous room (used for backtracking or penalties)
-    private int previousRoomId;
-
-    // Current health of the player
     private int health;
-
-    // Maximum health cap
     private int maxHealth;
 
-    // Stores all items collected by the player
     private List<Item> inventory;
 
-    // Currently equipped weapon (affects damage output)
     private Item equippedWeapon;
-
-    // Currently equipped armor (affects incoming damage)
     private Item equippedArmor;
 
-    // Tracks the current puzzle the player is interacting with
-    private Puzzle currentPuzzle;
-
-    /**
-     * Constructor
-     *
-     * Initializes the player with a starting room and default stats.
-     */
-    public Player(int startingRoomId) {
+    public Player(String startingRoomId) {
         this.currentRoomId = startingRoomId;
         this.previousRoomId = startingRoomId;
         this.maxHealth = 100;
@@ -57,123 +22,301 @@ public class Player {
         this.inventory = new ArrayList<>();
         this.equippedWeapon = null;
         this.equippedArmor = null;
-        this.currentPuzzle = null;
     }
 
-    // Returns current player location
-    public int getCurrentRoomId() { return currentRoomId; }
+    public String getCurrentRoomId() {
+        return currentRoomId;
+    }
 
-    /**
-     * Updates player location.
-     * Also stores the previous room before moving.
-     */
-    public void setCurrentRoomId(int currentRoomId) {
+    public void setCurrentRoomId(String currentRoomId) {
         this.previousRoomId = this.currentRoomId;
         this.currentRoomId = currentRoomId;
     }
 
-    public int getPreviousRoomId() { return previousRoomId; }
+    public String getPreviousRoomId() {
+        return previousRoomId;
+    }
 
-    // Allows manual override if needed (rare use case)
-    public void setPreviousRoomId(int previousRoomId) { this.previousRoomId = previousRoomId; }
+    public void returnToPreviousRoom() {
+        this.currentRoomId = this.previousRoomId;
+    }
 
-    public int getHealth() { return health; }
+    public int getHealth() {
+        return health;
+    }
 
-    /**
-     * Sets player health with bounds checking.
-     * Prevents health from going below 0 or above maxHealth.
-     */
     public void setHealth(int health) {
-        if (health < 0) this.health = 0;
-        else if (health > maxHealth) this.health = maxHealth;
-        else this.health = health;
+        if (health < 0) {
+            this.health = 0;
+        } else if (health > maxHealth) {
+            this.health = maxHealth;
+        } else {
+            this.health = health;
+        }
     }
 
-    public int getMaxHealth() { return maxHealth; }
-
-    /**
-     * Updates max health and ensures current health stays valid.
-     */
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = Math.max(1, maxHealth);
-        if (health > this.maxHealth) health = this.maxHealth;
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
-    /**
-     * Applies damage to the player.
-     */
     public void takeDamage(int amount) {
         setHealth(health - amount);
     }
 
-    // Returns true if player is still alive
-    public boolean isAlive() { return health > 0; }
+    public boolean isAlive() {
+        return health > 0;
+    }
 
-    public List<Item> getInventory() { return inventory; }
+    public List<Item> getInventory() {
+        return inventory;
+    }
 
-    /**
-     * Adds an item to the player's inventory.
-     * Also removes it from the room by setting its roomId to -1.
-     */
     public void addItem(Item item) {
         if (item != null) {
             inventory.add(item);
-            item.setRoomId(-1);
         }
     }
 
-    /**
-     * Removes an item from inventory.
-     */
     public boolean removeItem(Item item) {
         return item != null && inventory.remove(item);
     }
 
-    /**
-     * Searches for an item in inventory by name (case-insensitive).
-     */
     public Item findItemInInventory(String itemName) {
-        if (itemName == null) return null;
+        if (itemName == null) {
+            return null;
+        }
 
         for (Item item : inventory) {
             if (item.getName().equalsIgnoreCase(itemName.trim())) {
                 return item;
             }
         }
+
         return null;
     }
 
-    // Convenience method to check if player has an item
     public boolean hasItem(String itemName) {
         return findItemInInventory(itemName) != null;
     }
 
-    public Item getEquippedWeapon() { return equippedWeapon; }
-
-    // Sets equipped weapon (used for combat damage)
-    public void setEquippedWeapon(Item equippedWeapon) {
-        this.equippedWeapon = equippedWeapon;
+    public Item getEquippedWeapon() {
+        return equippedWeapon;
     }
 
-    public Item getEquippedArmor() { return equippedArmor; }
-
-    // Sets equipped armor (used for damage reduction)
-    public void setEquippedArmor(Item equippedArmor) {
-        this.equippedArmor = equippedArmor;
+    public Item getEquippedArmor() {
+        return equippedArmor;
     }
 
-    public Puzzle getCurrentPuzzle() { return currentPuzzle; }
+    // ======================== PLAYER ACTION METHODS ========================
 
-    // Updates the current puzzle based on room interaction
-    public void setCurrentPuzzle(Puzzle currentPuzzle) {
-        this.currentPuzzle = currentPuzzle;
+    public GameResult move(String direction, Room currentRoom) {
+        if (currentRoom == null) {
+            return new GameResult("Current room is invalid.", false, false);
+        }
+
+        String nextRoomId = currentRoom.getExit(direction);
+
+        if (nextRoomId == null) {
+            return new GameResult("You can't go that way.", true, false);
+        }
+
+        setCurrentRoomId(nextRoomId);
+
+        return new GameResult("You move " + direction + ".", true, false);
     }
 
-    /**
-     * Returns player to their previous room.
-     * Used for penalties like failed puzzles.
-     */
-    public void returnToPreviousRoom() {
-        currentRoomId = previousRoomId;
+    public GameResult pickupItem(String itemName, Room room) {
+        if (room == null) {
+            return new GameResult("Current room is invalid.", false, false);
+        }
+
+        if (itemName == null || itemName.trim().isEmpty()) {
+            return new GameResult("You must specify an item to pick up.", false, false);
+        }
+
+        Item item = room.removeItemByName(itemName);
+
+        if (item == null) {
+            return new GameResult("Item not found.", false, false);
+        }
+
+        addItem(item);
+
+        return new GameResult("You picked up " + item.getName() + ".", false, false);
+    }
+
+    public GameResult dropItem(String itemName, Room room) {
+        if (room == null) {
+            return new GameResult("Current room is invalid.", false, false);
+        }
+
+        Item item = findItemInInventory(itemName);
+
+        if (item == null) {
+            return new GameResult("That item is not in your inventory.", false, false);
+        }
+
+        removeItem(item);
+        room.addItem(item);
+
+        if (equippedWeapon == item) {
+            equippedWeapon = null;
+        }
+
+        if (equippedArmor == item) {
+            equippedArmor = null;
+        }
+
+        return new GameResult("You dropped " + item.getName() + ".", false, false);
+    }
+
+    public GameResult inspectItem(String itemName, Room room) {
+        if (itemName == null || itemName.trim().isEmpty()) {
+            return new GameResult("You must specify what to inspect.", false, false);
+        }
+
+        Item inventoryItem = findItemInInventory(itemName);
+
+        if (inventoryItem != null) {
+            return new GameResult(inventoryItem.getDescription(), false, false);
+        }
+
+        if (room != null) {
+            for (Item item : room.getItems()) {
+                if (item.getName().equalsIgnoreCase(itemName.trim())) {
+                    return new GameResult(item.getDescription(), false, false);
+                }
+            }
+        }
+
+        return new GameResult("That item could not be found.", false, false);
+    }
+
+    public GameResult getInventoryResult() {
+        if (inventory.isEmpty()) {
+            return new GameResult("Your inventory is empty.", false, false);
+        }
+
+        StringBuilder sb = new StringBuilder("Inventory:\n");
+
+        for (Item item : inventory) {
+            sb.append("- ").append(item.getName());
+
+            if (item == equippedWeapon || item == equippedArmor) {
+                sb.append(" (equipped)");
+            }
+
+            sb.append("\n");
+        }
+
+        return new GameResult(sb.toString(), false, false);
+    }
+
+    public GameResult equipItem(String itemName) {
+        Item item = findItemInInventory(itemName);
+
+        if (item == null) {
+            return new GameResult("That item is not in your inventory.", false, false);
+        }
+
+        if (!item.isEquippable()) {
+            return new GameResult("That item cannot be equipped.", false, false);
+        }
+
+        if (item.isWeapon()) {
+            equippedWeapon = item;
+        } else if (item.isArmor()) {
+            equippedArmor = item;
+        }
+
+        return new GameResult(item.getName() + " equipped.", false, false);
+    }
+
+    public GameResult useItem(String itemName) {
+        Item item = findItemInInventory(itemName);
+
+        if (item == null) {
+            return new GameResult("That item is not in your inventory.", false, false);
+        }
+
+        if (item.isConsumable()) {
+            setHealth(health + item.getStatValue());
+            removeItem(item);
+            return new GameResult(item.getName() + " used. Health: " + health + "/" + maxHealth, false, false);
+        }
+
+        return new GameResult("That item cannot be used right now.", false, false);
+    }
+
+    public GameResult interactPuzzle(Room room) {
+        if (room == null || !room.hasPuzzle()) {
+            return new GameResult("There is no puzzle here.", false, false);
+        }
+
+        return new GameResult("Puzzle available.", false, true);
+    }
+
+    public GameResult solvePuzzle(String answer, Room room) {
+        if (room == null || !room.hasPuzzle()) {
+            return new GameResult("There is no puzzle here.", false, false);
+        }
+
+        Puzzle puzzle = room.getPuzzle();
+
+        if (answer == null || answer.trim().isEmpty()) {
+            return new GameResult("You must enter an answer.", false, true);
+        }
+
+        boolean correct = puzzle.attemptAnswer(answer.trim());
+
+        if (correct) {
+            return new GameResult("Correct! " + puzzle.getOutcome(), true, false);
+        }
+
+        takeDamage(5);
+
+        if (puzzle.isFailed()) {
+            puzzle.resetPuzzle();
+            returnToPreviousRoom();
+            return new GameResult("Wrong! You failed the puzzle, lost 5 HP, and were sent back.", true, false);
+        }
+
+        return new GameResult("Incorrect. You lost 5 HP. Attempts left: " + puzzle.getRemainingAttempts(), false, true);
+    }
+
+    public GameResult attackMonster(Room room) {
+        if (room == null || !room.hasMonster()) {
+            return new GameResult("There is no monster here.", false, false);
+        }
+
+        Monster monster = room.getMonster();
+
+        int damage = 5;
+
+        if (equippedWeapon != null) {
+            damage += equippedWeapon.getStatValue();
+        }
+
+        monster.takeDamage(damage);
+
+        if (monster.isDefeated()) {
+            return new GameResult("You defeated the " + monster.getName() + ".", true, false);
+        }
+
+        int incomingDamage = monster.getDamage();
+
+        if (equippedArmor != null) {
+            incomingDamage = Math.max(0, incomingDamage - equippedArmor.getStatValue());
+        }
+
+        takeDamage(incomingDamage);
+
+        return new GameResult(
+                "You hit the " + monster.getName() + " for " + damage + " damage.\n" +
+                        "The " + monster.getName() + " hit you for " + incomingDamage + " damage.\n" +
+                        "HP: " + health + "/" + maxHealth,
+                false,
+                false
+        );
     }
 }

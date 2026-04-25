@@ -8,10 +8,11 @@ fixed:
 	-1 exact room
 	-room(s) specific 
 
-M_1, Mice, A bunch of mice that have taken over the dilapidated mansion. They have burrows everywhere in the mansion., false, 40, 10, random, any
-M_2, Bat, A mob of hostile bats that have made the dark and humid mansion their home., false, 50, 10, random, any
-M_3, Butterfly, A special pure soul, also killed by the old master of the mansion. Yet it retains its purity., false, 1, 0, fixed, R_14
-M_4, Ghost, Vengeful old souls killed by the old master of the mansion. They wander the mansion, holding a grudge against any living being., false, 100, 20, random, any
-M_5, Ghoul, The workers of the old master of the mansion. Overworked to death, they still fiercely guard special rooms., false, 120, 20, special, R_12 | R_6
-M_6, Butler, The loyal keeper of the mansion, although a remanent soul, is a benevolent one., false, 1, 0, fixed, R_11
-M_7, Specter, The old master of the mansion. Cursed by the gods for his greedy and wrathful nature. The boss monster, forever bound to the last room. Supposedly, it contains all of his life's treasures., false, 300, 10, fixed, R_20
+monsterId|monsterName|monsterDescr|isDead|healthPoints|attackPoints|spawnLocationType|roomID
+M_1|Mice|A bunch of mice that have taken over the dilapidated mansion. They have burrows everywhere in the mansion.|false|40|10|random|any
+M_2|Bat|A mob of hostile bats that have made the dark and humid mansion their home.|false|50|10|random|any
+M_3|Butterfly|A special pure soul killed by the old master of the mansion. It retains its purity.|false|1|0|fixed|R_14
+M_4|Ghost|Vengeful old souls killed by the old master of the mansion. They wander the mansion holding a grudge.|false|100|20|random|any
+M_5|Ghoul|The workers of the old master of the mansion. They fiercely guard special rooms.|false|120|20|special|R_12
+M_6|Butler|The loyal keeper of the mansion is a benevolent remnant soul.|false|1|0|fixed|R_11
+M_7|Specter|The old master of the mansion. The boss monster forever bound to the last room.|false|300|10|fixed|R_20

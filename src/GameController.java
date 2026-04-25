@@ -1,223 +1,86 @@
-/**
- * GameController Class      Author Dominique M.
- *
- * PURPOSE:
- * Serves as the middle layer between player input, game logic, and output.
- * This class receives raw commands from the user, interprets them, routes
- * them to the GameModel, and then passes the results to the GameView.
- *
- * DESIGN:
- * - Keeps command parsing separate from core game logic
- * - Keeps UI display separate from decision-making
- * - Helps maintain a clean MVC-style structure
- *
- * NOTE:
- * The controller should not contain major game rules. Its job is mainly to
- * translate user input into actions the model understands.
- */
-public class GameController     {
+public class GameController {
 
-    // Reference to the game logic layer
     private GameModel model;
 
-    // Reference to the output/display layer
-    private GameView view;
-
-    /**
-     * Constructor
-     *
-     * Connects the controller to the model and the view so it can route
-     * player commands and display the results.
-     */
-    public GameController(GameModel model, GameView view) {
+    public GameController(GameModel model) {
         this.model = model;
-        this.view = view;
     }
 
-    /**
-     * Starts the game by showing the welcome message and the first room.
-     * Also checks if the starting room contains a puzzle that should be shown.
-     */
-    public void startGame() {
-        GameResult result = model.getStartingRoomResult();
+    public GameResult processCommand(String input) {
 
-        // Initial welcome text
-        view.showMessage("Welcome to Escape the Mansion!");
-
-        // Show the opening room description
-        view.showMessage(result.getMessage());
-
-        // If the starting room has an active puzzle, show it
-        if (result.shouldShowPuzzle()) {
-            view.showPuzzle(model.getCurrentPuzzle());
-        }
-    }
-
-    /**
-     * Processes a single line of player input.
-     *
-     * Returns:
-     * - true if the game should continue running
-     * - false if the player chose to quit
-     */
-    public boolean processInput(String input) {
-
-        // Prevent null or empty input from being treated like a command
-        if (input == null || input.trim().isEmpty()) {
-            view.showMessage("Please enter a command.");
-            return true;
+        if (input == null || input.trim().equals("")) {
+            return new GameResult("Invalid command.", false, false);
         }
 
-        // Split into command and optional argument
-        // Example: "pickup sword" -> command = PICKUP, argument = sword
-        String[] parts = input.trim().split(" ", 2);
-        String command = parts[0].toUpperCase();
-        String argument = parts.length > 1 ? parts[1].trim() : "";
+        input = input.trim();
 
-        GameResult result;
+        String[] parts = input.split(" ", 2);
 
-        // Route the command to the correct model method
+        String command = parts[0].toLowerCase();
+        String argument = (parts.length > 1) ? parts[1].trim() : "";
+
         switch (command) {
 
-            // Movement commands (short and full versions supported)
-            case "N":
-            case "NORTH":
-                result = model.movePlayer("N");
-                break;
+            case "n":
+            case "north":
+                return model.movePlayer("north");
 
-            case "E":
-            case "EAST":
-                result = model.movePlayer("E");
-                break;
+            case "s":
+            case "south":
+                return model.movePlayer("south");
 
-            case "S":
-            case "SOUTH":
-                result = model.movePlayer("S");
-                break;
+            case "e":
+            case "east":
+                return model.movePlayer("east");
 
-            case "W":
-            case "WEST":
-                result = model.movePlayer("W");
-                break;
+            case "w":
+            case "west":
+                return model.movePlayer("west");
 
-            // Room exploration
-            case "EXPLORE":
-                result = model.exploreRoom();
-                break;
+            case "pickup":
+            case "take":
+                return model.pickupItem(argument);
 
-            // Show available exits from current room
-            case "EXITS":
-                result = model.getExits();
-                break;
+            case "drop":
+                return model.dropItem(argument);
 
-            // Pick up / take item from room
-            case "PICKUP":
-            case "TAKE":
-                result = model.pickupItem(argument);
-                break;
+            case "inspect":
+                return model.inspectItem(argument);
 
-            // Drop item from inventory into room
-            case "DROP":
-                result = model.dropItem(argument);
-                break;
+            case "use":
+                return model.useItem(argument);
 
-            // Use item from inventory
-            case "USE":
-                result = model.useItem(argument);
-                break;
+            case "equip":
+                return model.equipItem(argument);
 
-            // Equip item if it is wearable/usable as gear
-            case "EQUIP":
-                result = model.equipItem(argument);
-                break;
-
-            // Show player inventory
-            case "INVENTORY":
-                result = model.getInventory();
-                break;
-
-            // Inspect either a monster or an item
-            case "INSPECT":
-                if (argument.equalsIgnoreCase("monster")) {
-                    result = model.inspectMonster();
-                } else {
-                    result = model.inspectItem(argument);
-                }
-                break;
-
-            // Interact with puzzle if present
-            case "INTERACT":
+            case "interact":
                 if (argument.equalsIgnoreCase("puzzle")) {
-                    result = model.interactPuzzle();
-                } else {
-                    result = new GameResult("Not a valid interact command.");
+                    return model.interactPuzzle();
                 }
-                break;
+                return new GameResult("Invalid interact command.", false, false);
 
-            // Submit a puzzle answer
-            case "SOLVE":
-                result = model.solvePuzzle(argument);
-                break;
+            case "answer":
+            case "solve":
+                return model.attemptPuzzle(argument);
 
-            // Attack the current monster
-            case "ATTACK":
-                result = model.attackMonster();
-                break;
+            case "attack":
+                return model.attackMonster();
 
-            // Show current player status
-            case "STATUS":
-                result = model.getStatus();
-                break;
+            case "inventory":
+                return model.getInventory();
 
-            // Show help text
-            case "HELP":
-                result = new GameResult(buildHelpText());
-                break;
+            case "status":
+                return model.getStatus();
 
-            // Quit ends the loop immediately
-            case "QUIT":
-            case "EXITGAME":
-                view.showMessage("Thanks for playing Escape the Mansion.");
-                return false;
+            case "help":
+                return new GameResult(
+                        "Commands: north, south, east, west, pickup <item>, drop <item>, inspect <item>, use <item>, equip <item>, interact puzzle, solve <answer>, attack, inventory, status, quit",
+                        false,
+                        false
+                );
 
-            // Catch-all for invalid commands
             default:
-                result = new GameResult("Not a valid command.");
-                break;
+                return new GameResult("Unknown command.", false, false);
         }
-
-        // Display the message returned by the model
-        view.showMessage(result.getMessage());
-
-        // If the result says a puzzle should be shown, display the puzzle
-        if (result.shouldShowPuzzle()) {
-            view.showPuzzle(model.getCurrentPuzzle());
-        }
-
-        // Keep the game loop running
-        return true;
-    }
-
-    /**
-     * Builds the help text displayed to the player.
-     * Keeping this in its own method makes it easier to update later.
-     */
-    private String buildHelpText() {
-        return "Commands:\n" +
-                "N, E, S, W\n" +
-                "EXPLORE\n" +
-                "EXITS\n" +
-                "PICKUP <item>\n" +
-                "DROP <item>\n" +
-                "USE <item>\n" +
-                "EQUIP <item>\n" +
-                "INVENTORY\n" +
-                "INSPECT <item/monster>\n" +
-                "INTERACT PUZZLE\n" +
-                "SOLVE <answer>\n" +
-                "ATTACK\n" +
-                "STATUS\n" +
-                "HELP\n" +
-                "QUIT";
     }
 }

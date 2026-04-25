@@ -1,117 +1,141 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class Room {
-    // Marquella's room idea, adapted to fit the rest of the system.
-    private int roomId;
-    private String roomCode;
+
+    // ======================== // VARIABLES // ========================
+    private String roomID;
     private String roomName;
     private String roomDesc;
+
     private boolean visited;
-    private java.util.Map<String, Integer> exits;
-    private List<Item> roomInventory;
+
+    private Map<String, String> exits;
+
+    private ArrayList<Item> roomInventory;
+
     private Puzzle puzzle;
+
+    // ✅ ADDED: Monster support
     private Monster monster;
 
-    public Room(int roomId, String roomCode, String roomName, String roomDesc) {
-        this.roomId = roomId;
-        this.roomCode = roomCode;
+    // ======================== // CONSTRUCTOR // ========================
+    public Room(String roomID, String roomName, String roomDesc) {
+        this.roomID = roomID;
         this.roomName = roomName;
         this.roomDesc = roomDesc;
+
         this.visited = false;
+
         this.exits = new HashMap<>();
         this.roomInventory = new ArrayList<>();
+
         this.puzzle = null;
         this.monster = null;
     }
 
-    // ======================== // CONSTRUCTOR OVERLOAD FOR MAP DATA // ========================
-    public Room(String roomCode, String roomName, String roomDesc) {
-        this(parseRoomNumber(roomCode), roomCode, roomName, roomDesc);
+    // ======================== // GETTERS // ========================
+    public String getRoomID() {
+        return roomID;
     }
 
-    private static int parseRoomNumber(String roomCode) {
-        if (roomCode == null) {
-            return -1;
-        }
-
-        try {
-            return Integer.parseInt(roomCode.replace("R_", "").trim());
-        }
-        catch (NumberFormatException e) {
-            return -1;
-        }
+    public String getRoomName() {
+        return roomName;
     }
 
-    public int getRoomId() { return roomId; }
-    public String getRoomCode() { return roomCode; }
-    public String getName() { return roomName; }
-    public String getDescription() { return roomDesc; }
+    public String getRoomDesc() {
+        return roomDesc;
+    }
 
-    public void addExit(String direction, int targetRoomId) {
-        if (targetRoomId > 0) {
-            exits.put(normalizeDirection(direction), targetRoomId);
+    // ======================== // EXIT METHODS // ========================
+    public String getExit(String direction) {
+        if (direction == null) return null;
+        return exits.get(direction.toLowerCase());
+    }
+
+    public void addExit(String direction, String roomID) {
+        if (direction != null && roomID != null && !roomID.equals("0")) {
+            exits.put(direction.toLowerCase(), roomID);
         }
     }
 
-    // ======================== // EXIT OVERLOAD FOR MAP DATA // ========================
-    public void addExit(String direction, String targetRoomCode) {
-        int targetRoomId = parseRoomNumber(targetRoomCode);
-        addExit(direction, targetRoomId);
-    }
-
-    public int getExit(String direction) {
-        return exits.getOrDefault(normalizeDirection(direction), -1);
-    }
-
-    private String normalizeDirection(String direction) {
-        if (direction == null || direction.trim().isEmpty()) {
-            return "";
-        }
-
-        String value = direction.trim().toUpperCase();
-        if (value.startsWith("N")) return "N";
-        if (value.startsWith("E")) return "E";
-        if (value.startsWith("S")) return "S";
-        if (value.startsWith("W")) return "W";
-        return value;
-    }
-
-    public java.util.Map<String, Integer> getExits() {
+    public Map<String, String> getExits() {
         return exits;
     }
 
-    public boolean isVisited() { return visited; }
-    public void markVisited() { visited = true; }
+    // ======================== // VISITED TRACKING // ========================
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
 
-    public List<Item> getItems() { return roomInventory; }
+    public boolean isVisited() {
+        return visited;
+    }
 
+    public boolean trackVisit() {
+        if (visited) {
+            return true;
+        }
+        visited = true;
+        return false;
+    }
+
+    // ======================== // ROOM ITEMS // ========================
     public void addItem(Item item) {
         if (item != null) {
             roomInventory.add(item);
-            item.setRoomId(roomId);
         }
     }
 
-    public void removeItem(Item item) {
-        roomInventory.remove(item);
+    public boolean removeItem(Item item) {
+        return item != null && roomInventory.remove(item);
     }
 
-    public Item findItem(String itemName) {
+    public ArrayList<Item> getItems() {
+        return roomInventory;
+    }
+
+    public Item removeItemByName(String itemName) {
         if (itemName == null) return null;
-        for (Item item : roomInventory) {
-            if (item.getName().equalsIgnoreCase(itemName.trim())) {
-                return item;
+
+        for (int i = 0; i < roomInventory.size(); i++) {
+            if (roomInventory.get(i).getName().equalsIgnoreCase(itemName.trim())) {
+                return roomInventory.remove(i);
             }
         }
         return null;
     }
 
-    public Puzzle getPuzzle() { return puzzle; }
-    public void setPuzzle(Puzzle puzzle) { this.puzzle = puzzle; }
-    public void addPuzzle(Puzzle puzzle) { this.puzzle = puzzle; }
+    // ======================== // PUZZLE METHODS // ========================
+    public void addPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
+    }
 
-    public Monster getMonster() { return monster; }
-    public void setMonster(Monster monster) { this.monster = monster; }
+    public boolean hasPuzzle() {
+        return puzzle != null && !puzzle.isSolved();
+    }
+
+    public Puzzle getPuzzle() {
+        return puzzle;
+    }
+
+    public void resetPuzzle() {
+        if (puzzle != null) {
+            puzzle.resetPuzzle();
+        }
+    }
+
+    // ======================== // MONSTER METHODS (NEW) ========================
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public boolean hasMonster() {
+        return monster != null && !monster.isDefeated();
+    }
 }

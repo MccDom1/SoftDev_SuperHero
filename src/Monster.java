@@ -24,27 +24,6 @@ public class Monster {
         this.lootIds = new ArrayList<>();
     }
 
-    // ======================== // CONSTRUCTOR OVERLOAD FOR MAP DATA // ========================
-    public Monster(String id, String name, String description, boolean defeated,
-                   int health, int damage, String spawnType, String roomCode) {
-        this(id, name, description, parseRoomNumber(roomCode), health, damage,
-                !spawnType.equalsIgnoreCase("friendly"));
-        this.defeated = defeated;
-    }
-
-    private static int parseRoomNumber(String roomCode) {
-        if (roomCode == null) {
-            return -1;
-        }
-
-        try {
-            return Integer.parseInt(roomCode.replace("R_", "").trim());
-        }
-        catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
     public String getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }

@@ -6,7 +6,6 @@ public class Item {
     private final String type;
     private final String description;
     private final int statValue;
-    private int roomId;
 
     private boolean consumable;
     private boolean equippable;
@@ -18,7 +17,6 @@ public class Item {
         this.type = type;
         this.description = description;
         this.statValue = statValue;
-        this.roomId = -1;
 
         // ======================== // TYPE LOGIC // ========================
         if (type.equalsIgnoreCase("consumable")) {
@@ -36,23 +34,6 @@ public class Item {
         }
     }
 
-    // ======================== // CONSTRUCTOR OVERLOAD FOR GAMEWORLD DATA // ========================
-    public Item(String id, String name, String type, String description,
-                int healthEffect, int damageEffect, int roomId,
-                boolean consumable, boolean equippable) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.description = description;
-
-        // Stat value is kept as the single shared item value.
-        // Consumables use it as health. Weapons/equipment use it as damage/defense.
-        this.statValue = type.equalsIgnoreCase("consumable") ? healthEffect : damageEffect;
-        this.roomId = roomId;
-        this.consumable = consumable;
-        this.equippable = equippable;
-    }
-
     // ======================== // GETTERS // ========================
     public String getId() { return id; }
     public String getName() { return name; }
@@ -62,18 +43,6 @@ public class Item {
     public int getStatValue() {
         return statValue;
     }
-
-    public int getHealthEffect() {
-        return isConsumable() ? statValue : 0;
-    }
-
-    public int getDamageEffect() {
-        return isWeapon() || isArmor() ? statValue : 0;
-    }
-
-    public int getRoomId() { return roomId; }
-
-    public void setRoomId(int roomId) { this.roomId = roomId; }
 
     public boolean isConsumable() { return consumable; }
     public boolean isEquippable() { return equippable; }

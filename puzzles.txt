@@ -1,4 +1,4 @@
-puzzleID | puzzleName | puzzleDescription | puzzleSolution | numAttempts | isSolved | puzzleOutcome | roomName | roomID 
+puzzleID | puzzleName | puzzleDescription | puzzleSolution | numAttmpts | isSolved | puzzleOutcome | roomName | roomID
 
 PZ01 | The Scholar's Sequence | Three brightly colored books (Red, Yellow, Blue) sit out of place on a shelf. Put books in order to access the passage: | Red, Yellow, Blue | 3 | false | Access to Secret Passage | Library | R_4
 
@@ -8,8 +8,8 @@ PZ03 | The Chef's Secret | A recipe book has a greasy thumbprint over the final 
 
 PZ04 | The Silent Prayer | A locked box requires a combination of three strange symbols (Eye, Star, Dagger) found on the walls. Put symbols in order to open the box: | Eye, Star, Dagger | 5 | false | Item Dropped: Health Stone (use to escape mansion) | Secret Underground Chapel | R_14
 
-PZ05 | The Butler's Riddle | The Butler asks: "I'm always with you at dinner, yet you never get to eat me. I rest beside the plate and help you take your first bite. What am I?" | Napkin | 3 | false | Item Dropped: Rusted Axe = Attack +12 | Butler's Pantry | R_11
+PZ05 | The Butler's Riddle | The Butler asks: â€œIâ€™m always with you at dinner, yet you never get to eat me. I rest beside the plate and help you take your first bite. What am I?â€ | Napkin | 3 | false | Item Dropped: Rusted Axe = Attack +12 | Butler's Pantry | R_11
 
-PZ06 | The Mirror's Reflection | A cracked mirror reflects the room, and the piano plays an unfinished number sequence. Finish what the mirror cannot. | Interact with the Grand Piano by playing the reflection's last note: 1, 2, 3, 4, 5, _ | 3 | false | Item Dropped: Golf Club = Attack: +8 | Ballroom | R_8
+PZ06 | The Mirror's Reflection | A cracked mirror reflects the room, and the piano plays an unfinished number sequence. Finish what the mirror cannot. | 6 | 3 | false | Item Dropped: Golf Club = Attack: +8 | Ballroom | R_8
 
 PZ07 | The Ghost's Toll | The water is murky. Use the item that is the "gift of life" to clear the water. | Use "Apple" in the bathtub. | 4 | false | Item Dropped: Master Room Key | Bathroom | R_17

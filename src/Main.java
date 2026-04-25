@@ -1,51 +1,45 @@
-/**
- * Main Class      Author Dominique M.
- *
- * PURPOSE:
- * Entry point of the game. Responsible for initializing core components
- * and running the main game loop.
- *
- * DESIGN:
- * - Creates and connects Model, View, and Controller
- * - Keeps the loop running until the player chooses to quit
- *
- * NOTE:
- * This class is intentionally simple. It does not contain game logic,
- * only setup and control flow for execution.
- */
-
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        // Scanner used to read player input from the console
-        Scanner scanner = new Scanner(System.in);
+        // ======================== // LOAD WORLD // ========================
+        GameWorld world = new GameWorld();
 
-        // Initialize core components of the game
-        GameModel model = new GameModel();      // handles game logic
-        GameView view = new GameView();         // handles output
-        GameController controller = new GameController(model, view); // handles input routing
+        world.loadRooms("rooms.txt");
+        world.loadItems("items.txt");
+        world.loadPuzzles("puzzles.txt");
+        world.loadMonsters("monsters.txt");
 
-        // Start the game (welcome message + initial room display)
-        controller.startGame();
+        // ======================== // MVC SETUP // ========================
+        GameModel model = new GameModel(world);
+        GameController controller = new GameController(model);
+        GameView view = new GameView();
 
-        // Main game loop
-        boolean running = true;
-        while (running) {
+        Scanner input = new Scanner(System.in);
 
-            // Show available commands prompt
-            view.showPrompt();
+        System.out.println("Game started. Type a command (or 'quit'):");
 
-            // Read input from the player
-            String input = scanner.nextLine();
+        // ======================== // GAME LOOP // ========================
+        while (true) {
 
-            // Process input and determine if the game should continue
-            running = controller.processInput(input);
+            System.out.print("> ");
+            String userInput = input.nextLine();
+
+            if (userInput.equalsIgnoreCase("quit")) {
+                System.out.println("Goodbye.");
+                break;
+            }
+
+            GameResult result = controller.processCommand(userInput);
+
+            view.display(result, model);
         }
 
-        // Clean up scanner resource when game ends
-        scanner.close();
+        input.close();
     }
 }
+
+
+
