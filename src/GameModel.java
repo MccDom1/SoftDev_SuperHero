@@ -22,9 +22,27 @@ public class GameModel {
         return gameWorld.getRoomMap().get(player.getCurrentRoomId());
     }
 
+    // ======================== // MOVEMENT // ========================
     public GameResult movePlayer(String direction) {
+
         Room currentRoom = getCurrentRoom();
 
+        if (currentRoom == null) {
+            return new GameResult("Current room is invalid.", false, false);
+        }
+
+        String nextRoomId = currentRoom.getExit(direction);
+
+        if (nextRoomId == null) {
+            return new GameResult("You can't go that way.", false, false);
+        }
+
+        GameResult lockCheck = checkLockedRoom(nextRoomId);
+        if (lockCheck != null) {
+            return lockCheck;
+        }
+
+        // Move player
         GameResult moveResult = player.move(direction, currentRoom);
 
         if (!moveResult.shouldShowRoom()) {
@@ -39,32 +57,50 @@ public class GameModel {
 
         if (newRoom.hasMonster()) {
             return new GameResult(
-                    "You enter " + newRoom.getRoomName() + ". A " + newRoom.getMonster().getName() + " is here.\n" +
-                            "Available monster commands: inspect monster, attack, defend, flee",
-                    false,
+                    "You enter " + newRoom.getRoomName() + ". A " + newRoom.getMonster().getName() + " is here.",
+                    true,
                     false
             );
         }
 
         if (newRoom.hasPuzzle()) {
             return new GameResult(
-                    "You enter " + newRoom.getRoomName() + ". There is a puzzle here.\n" +
-                            "Use 'interact puzzle' to inspect it.",
-                    false,
+                    "You enter " + newRoom.getRoomName() + ". There is a puzzle here. Use 'interact puzzle' to inspect it.",
+                    true,
                     false
             );
         }
 
-        return new GameResult("You enter " + newRoom.getRoomName() + ".", false, false);
+        return new GameResult("You enter " + newRoom.getRoomName() + ".", true, false);
     }
 
-    public GameResult exploreRoom() {
-        Room room = getCurrentRoom();
+    // ======================== // LOCKED ROOMS // ========================
+    private GameResult checkLockedRoom(String nextRoomId) {
 
-        if (room == null) {
-            return new GameResult("Current room is invalid.", false, false);
+        if (nextRoomId.equalsIgnoreCase("R_22") && !player.hasItem("Master Room Key")) {
+            return new GameResult("The Master Bedroom is locked. You need the Master Room Key.", false, false);
         }
 
+        if (nextRoomId.equalsIgnoreCase("R_20") && !player.hasItem("Ghost Key")) {
+            return new GameResult("The Attic is locked. You need the Ghost Key.", false, false);
+        }
+
+        if (nextRoomId.equalsIgnoreCase("R_23") && !player.hasItem("Closet Key")) {
+            return new GameResult("The Closet is locked. You need the Closet Key.", false, false);
+        }
+
+        if (nextRoomId.equalsIgnoreCase("R_5")) {
+            Room currentRoom = getCurrentRoom();
+            if (currentRoom != null && currentRoom.hasPuzzle()) {
+                return new GameResult("A hidden mechanism blocks the Secret Passage. Solve the Library puzzle first.", false, false);
+            }
+        }
+
+        return null;
+    }
+
+    // ======================== // ROOM ACTIONS // ========================
+    public GameResult exploreRoom() {
         return new GameResult("You look around carefully.", true, false);
     }
 
@@ -78,6 +114,7 @@ public class GameModel {
         return new GameResult("Available exits: " + room.getExitList(), false, false);
     }
 
+    // ======================== // ITEM ACTIONS // ========================
     public GameResult pickupItem(String itemName) {
         return player.pickupItem(itemName, getCurrentRoom());
     }
@@ -91,10 +128,24 @@ public class GameModel {
     }
 
     public GameResult useItem(String itemName) {
-        GameResult result = player.useItem(itemName);
+
+        Room room = getCurrentRoom();
+        Puzzle puzzle = null;
+        boolean wasSolved = false;
+
+        if (room != null && room.hasPuzzle()) {
+            puzzle = room.getPuzzle();
+            wasSolved = puzzle.isSolved();
+        }
+
+        GameResult result = player.useItem(itemName, room);
 
         if (result.isGameOver()) {
             return result;
+        }
+
+        if (puzzle != null && !wasSolved && puzzle.isSolved()) {
+            grantPuzzleReward(puzzle);
         }
 
         return checkWinCondition(result);
@@ -104,25 +155,67 @@ public class GameModel {
         return player.equipItem(itemName);
     }
 
+    // ======================== // PUZZLE ACTIONS // ========================
     public GameResult interactPuzzle() {
         return player.interactPuzzle(getCurrentRoom());
     }
 
     public GameResult attemptPuzzle(String answer) {
-        GameResult result = player.solvePuzzle(answer, getCurrentRoom());
+
+        Room room = getCurrentRoom();
+        Puzzle puzzle = null;
+        boolean wasSolved = false;
+
+        if (room != null && room.hasPuzzle()) {
+            puzzle = room.getPuzzle();
+            wasSolved = puzzle.isSolved();
+        }
+
+        GameResult result = player.solvePuzzle(answer, room);
 
         if (!player.isAlive()) {
             return new GameResult("Your health reached 0. Game over.", false, false, true);
         }
 
+        if (puzzle != null && !wasSolved && puzzle.isSolved()) {
+            grantPuzzleReward(puzzle);
+        }
+
         return result;
     }
 
+    public GameResult resetPuzzle() {
+        Room room = getCurrentRoom();
+
+        if (room == null || !room.hasPuzzle()) {
+            return new GameResult("There is no active puzzle to reset.", false, false);
+        }
+
+        room.getPuzzle().resetPuzzle();
+
+        return new GameResult("Puzzle reset.", false, true);
+    }
+
+    // ======================== // MONSTER ACTIONS // ========================
     public GameResult attackMonster() {
-        GameResult result = player.attackMonster(getCurrentRoom());
+
+        Room room = getCurrentRoom();
+
+        if (room == null) {
+            return new GameResult("Current room is invalid.", false, false);
+        }
+
+        Monster monster = room.getMonster();
+        boolean wasDefeated = monster != null && monster.isDefeated();
+
+        GameResult result = player.attackMonster(room);
 
         if (!player.isAlive()) {
             return new GameResult("Your health reached 0. Game over.", false, false, true);
+        }
+
+        if (monster != null && !wasDefeated && monster.isDefeated()) {
+            dropMonsterLoot(monster, room);
         }
 
         return result;
@@ -137,6 +230,7 @@ public class GameModel {
     }
 
     public GameResult inspectMonster() {
+
         Room room = getCurrentRoom();
 
         if (room == null || !room.hasMonster()) {
@@ -148,14 +242,13 @@ public class GameModel {
         return new GameResult(
                 monster.getName() + "\n" +
                         monster.getDescription() + "\n" +
-                        "HP: " + monster.getHealth() + "\n" +
-                        "Damage: " + monster.getDamage() + "\n" +
-                        "Available commands: attack, defend, flee",
+                        "HP: " + monster.getHealth(),
                 false,
                 false
         );
     }
 
+    // ======================== // PLAYER INFO // ========================
     public GameResult getInventory() {
         return player.getInventoryResult();
     }
@@ -163,30 +256,71 @@ public class GameModel {
     public GameResult getStatus() {
         return new GameResult(
                 "Health: " + player.getHealth() + "/" + player.getMaxHealth() +
-                        "\nScore: " + player.getPlayerScore() +
-                        "\nCurrent Room: " + player.getCurrentRoomId(),
+                        "\nScore: " + player.getPlayerScore(),
                 false,
                 false
         );
     }
 
-    private GameResult checkWinCondition(GameResult previousResult) {
-        Room room = getCurrentRoom();
+    // ======================== // REWARDS + LOOT // ========================
+    private void grantPuzzleReward(Puzzle puzzle) {
 
-        if (room == null) {
-            return previousResult;
+        Room room = getCurrentRoom();
+        if (room == null) return;
+
+        Item reward = null;
+
+        switch (puzzle.getPuzzleID()) {
+            case "PZ02": reward = createItemByName("Spirit Potion"); break;
+            case "PZ03": reward = createItemByName("Attack Potion"); break;
+            case "PZ04": reward = createItemByName("Health Stone"); break;
+            case "PZ05": reward = createItemByName("Rusted Axe"); break;
+            case "PZ06": reward = createItemByName("Golf Club"); break;
+            case "PZ07": reward = createItemByName("Master Room Key"); break;
         }
 
-        boolean inMasterBedroom = room.getRoomID().equalsIgnoreCase("R_22");
-        boolean hasStone = player.hasItem("Health Stone");
-        boolean hasFinalKey = player.hasItem("Final Key");
-        boolean specterDefeated = !room.hasMonster();
+        if (reward != null) {
+            room.addItem(reward);
+        }
+    }
 
-        if (inMasterBedroom && hasStone && hasFinalKey && specterDefeated) {
+    private void dropMonsterLoot(Monster monster, Room room) {
+
+        Item drop = null;
+
+        if (monster.getName().equalsIgnoreCase("Specter")) {
+            drop = createItemByName("Final Key");
+        }
+
+        if (drop != null) {
+            room.addItem(drop);
+        }
+    }
+
+    private Item createItemByName(String name) {
+        if (name.equalsIgnoreCase("Final Key")) {
+            return new Item("A_21", "Final Key", "utility", "Unlocks the final escape.", 0);
+        }
+        return null;
+    }
+
+    // ======================== // WIN CONDITION // ========================
+    private GameResult checkWinCondition(GameResult previousResult) {
+
+        Room room = getCurrentRoom();
+
+        if (room == null) return previousResult;
+
+        boolean win =
+                room.getRoomID().equalsIgnoreCase("R_22") &&
+                        player.hasItem("Health Stone") &&
+                        player.hasItem("Final Key") &&
+                        !room.hasMonster();
+
+        if (win) {
             return new GameResult(
                     previousResult.getMessage() +
-                            "\nYou use the Health Stone and Final Key. The Master Safe Room opens.\n" +
-                            "You escaped the mansion!",
+                            "\nYou escaped the mansion!",
                     false,
                     false,
                     true

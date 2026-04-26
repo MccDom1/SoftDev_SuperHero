@@ -10,27 +10,23 @@ public class GameView {
             Room room = model.getCurrentRoom();
 
             if (room != null) {
-                System.out.println("\n" + room.getRoomName());
+                System.out.println("\nYou're in the " + room.getRoomName() + ".");
+                System.out.println(room.getRoomDesc());
 
                 if (!room.getItems().isEmpty()) {
                     System.out.println("\nItems here:");
                     for (Item item : room.getItems()) {
                         System.out.println("- " + item.getName());
                     }
-                    System.out.println("Available item commands: pickup <item>, loot <item>, inspect <item>, use <item>, equip <item>, drop <item>");
                 }
 
                 if (room.hasPuzzle()) {
-                    System.out.println("\nPuzzle here: " + room.getPuzzle().getPuzzleName());
-                    System.out.println("Available puzzle commands: interact puzzle, solve <answer>, ignore puzzle");
+                    System.out.println("\nThere is a puzzle here.");
                 }
 
                 if (room.hasMonster()) {
                     System.out.println("\nMonster here: " + room.getMonster().getName());
-                    System.out.println("Available monster commands: inspect monster, attack, defend, flee");
                 }
-
-                System.out.println("\nGeneral commands: n, s, e, w, explore, exits, inventory, status, help, quit");
             }
         }
 
@@ -44,7 +40,6 @@ public class GameView {
                 System.out.println(puzzle.getDescription());
                 System.out.println("Attempts left: " + puzzle.getRemainingAttempts());
                 System.out.println("Submit answer with: solve <answer>");
-                System.out.println("Other options: ignore puzzle");
             }
         }
     }

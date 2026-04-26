@@ -55,6 +55,10 @@ public class Player {
         return playerScore;
     }
 
+    public boolean isAlive() {
+        return health > 0;
+    }
+
     public void setHealth(int health) {
         if (health < 0) {
             this.health = 0;
@@ -67,10 +71,6 @@ public class Player {
 
     public void takeDamage(int amount) {
         setHealth(health - amount);
-    }
-
-    public boolean isAlive() {
-        return health > 0;
     }
 
     public List<Item> getInventory() {
@@ -99,6 +99,7 @@ public class Player {
                 return item;
             }
         }
+
         return null;
     }
 
@@ -183,9 +184,11 @@ public class Player {
 
         for (Item item : inventory) {
             sb.append("- ").append(item.getName());
+
             if (item == equippedWeapon || item == equippedArmor) {
                 sb.append(" (equipped)");
             }
+
             sb.append("\n");
         }
 
@@ -212,13 +215,28 @@ public class Player {
         return new GameResult(item.getName() + " equipped.", false, false);
     }
 
-    public GameResult useItem(String itemName) {
+    public GameResult useItem(String itemName, Room room) {
         Item item = findItemInInventory(itemName);
 
         if (item == null) {
             return new GameResult("That item is not in your inventory.", false, false);
         }
 
+        // Utility/consumable puzzle item use
+        if (room != null && room.hasPuzzle()) {
+            Puzzle puzzle = room.getPuzzle();
+
+            if (puzzle.getSolution().equalsIgnoreCase(item.getName())) {
+                boolean solved = puzzle.attemptAnswer(item.getName());
+
+                if (solved) {
+                    removeItem(item);
+                    return new GameResult("You used " + item.getName() + ". Puzzle solved! " + puzzle.getOutcome(), true, false);
+                }
+            }
+        }
+
+        // Consumable item use
         if (item.isConsumable()) {
             int effect = item.getHealthEffect();
 
@@ -240,6 +258,7 @@ public class Player {
             return new GameResult(item.getName() + " used. Health: " + health + "/" + maxHealth, false, false);
         }
 
+        // Utility item use outside puzzle
         if (item.isUtility()) {
             return new GameResult("You used " + item.getName() + ".", false, false);
         }
@@ -274,6 +293,7 @@ public class Player {
 
         takeDamage(5);
         playerScore -= puzzle.getWrongAttempt();
+
         if (playerScore < 0) playerScore = 0;
 
         if (!isAlive()) {
@@ -297,6 +317,7 @@ public class Player {
         Monster monster = room.getMonster();
 
         int damage = 5;
+
         if (equippedWeapon != null) {
             damage += equippedWeapon.getStatValue();
         }
@@ -304,13 +325,11 @@ public class Player {
         monster.takeDamage(damage);
 
         if (monster.isDefeated()) {
-            if (monster.getName().equalsIgnoreCase("Specter")) {
-                addItem(new Item("A_21", "Final Key", "utility", "A majestic key covered with jewels. Unlocks the Master Safe Room.", 0));
-            }
             return new GameResult("You defeated the " + monster.getName() + ".", false, false);
         }
 
         int incomingDamage = monster.getDamage();
+
         if (equippedArmor != null) {
             incomingDamage = Math.max(0, incomingDamage - equippedArmor.getStatValue());
         }
