@@ -6,7 +6,7 @@ PZ02 | The Broken Lullaby | A music box plays an odd discordant tune. A gear is 
 
 PZ03 | The Chef's Secret | A recipe book has a greasy thumbprint over the final ingredient for a Soul Soup. Something is missing from the pot. | Bitter Herb | 3 | false | Item Dropped: Attack Potion = Attack +15 | Kitchen | R_10
 
-PZ04 | The Silent Prayer | A locked box requires a sequence of three symbols found on the walls. Arrange them in the correct order to unlock it. | Eye Star Dagger | 5 | false | Item Dropped: Health Stone | Secret Underground Chapel | R_14
+PZ04 | The Silent Prayer | A locked box requires a sequence of three symbols found on the walls somewhere in the mansion. Arrange them in the correct order to unlock it. | Eye Star Dagger | 5 | false | Item Dropped: Health Stone | Secret Underground Chapel | R_14
 
 PZ05 | The Butler's Riddle | The Butler asks I am always with you at dinner yet you never get to eat me. I rest beside the plate and help you take your first bite. What am I | Napkin | 3 | false | Item Dropped: Rusted Axe = Attack +12 | Butlers Pantry | R_11
 

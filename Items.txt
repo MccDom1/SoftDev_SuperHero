@@ -3,7 +3,7 @@ A_1,Apple,consumable,A fresh red apple sits on a dusty table It looks safe to ea
 A_2,Milk,consumable,A glass of milk is on the counter The smell makes you gag,-20,R_10
 A_3,Spirit Potion,consumable,A vial shines bright blue on the floor You feel safe near it,25,R_18
 A_4,Curse Potion,consumable,A vial with smoky liquid inside Removes one curse,1,R_14
-A_5,Attack Potion,consumable,A vial that glows yellow and makes you feel powerful,15,R_10
+A_5,Attack Potion,consumable,A vial that glows yellow and makes you feel powerful,25,R_10
 A_6,Broken Dagger,weapon,A chipped and rusted dagger It is weak but better than nothing,5,R_1
 A_7,Golf Club,weapon,A heavy iron golf club It could do some damage,8,R_8
 A_8,Rusted Axe,weapon,A rusty axe with a sharp blade,12,R_11

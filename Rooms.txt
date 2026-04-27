@@ -4,7 +4,7 @@ R_1, Front Foyer, A wide marble entryway that's too clean compared to the rest o
 R_2, Grand Staircase, A sweeping staircase splits left and right. The steps creak at different pitches and old family portraits line the walls. Most faces are normal but one has their eyes scratched out., 15,1,0,0
 R_3, Parlor, Chairs sit around an empty fireplace like people were in a conversation but never returned. The wallpaper is faded and peeling. The fireplace is cold but there is still ash inside., 0,0,0,1
 R_4, Library, Floor to ceiling bookshelves cover a huge room with ladders on rails. The air is thick and dry and dust scatters with every step. Some books look newer and one shelf has three brightly colored books., 5,0,1,0
-R_5, Secret Passage, A section of a shelf swings inward revealing a narrow passage. The walls have scratch marks and the air is cold with faint sounds through the walls., 6,4,0,0
+R_5, Secret Passage, A section of a shelf swings inward revealing a narrow passage. The walls have scratch marks that resemble an eye, a star, and a dagger. The air is cold with faint whispers sounding through the walls., 6,4,0,0
 R_6, Study, A massive desk sits in the center with scattered pages. The fireplace smells faintly of smoke and a chair lies on the ground. A ghoul stands behind the desk., 0,5,0,0
 R_7, Dining Main Hall, A long table is set with plates covered in dust as if dinner was never served. Tall candlesticks sit melted in the center., 1,10,8,9
 R_8, Ballroom, A wide ballroom with a polished floor marked with scratches and scattered glass. A cracked mirror reflects you in pieces and a grand piano sits nearby., 0,0,0,7
