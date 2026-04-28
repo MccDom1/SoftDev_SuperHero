@@ -10,6 +10,9 @@ public class Player {
     private int maxHealth;
     private int playerScore;
 
+    private int attackBonus;
+    private int defenseBonus;
+
     private List<Item> inventory;
 
     private Item equippedWeapon;
@@ -21,6 +24,8 @@ public class Player {
         this.maxHealth = 100;
         this.health = 100;
         this.playerScore = 100;
+        this.attackBonus = 0;
+        this.defenseBonus = 0;
         this.inventory = new ArrayList<>();
         this.equippedWeapon = null;
         this.equippedArmor = null;
@@ -53,6 +58,14 @@ public class Player {
 
     public int getPlayerScore() {
         return playerScore;
+    }
+
+    public int getAttackBonus() {
+        return attackBonus;
+    }
+
+    public int getDefenseBonus() {
+        return defenseBonus;
     }
 
     public boolean isAlive() {
@@ -222,7 +235,6 @@ public class Player {
             return new GameResult("That item is not in your inventory.", false, false);
         }
 
-        // Utility/consumable puzzle item use
         if (room != null && room.hasPuzzle()) {
             Puzzle puzzle = room.getPuzzle();
 
@@ -231,13 +243,24 @@ public class Player {
 
                 if (solved) {
                     removeItem(item);
-                    return new GameResult("You used " + item.getName() + ". Puzzle solved! " + puzzle.getOutcome(), true, false);
+                    return new GameResult("You used " + item.getName() + ". Puzzle solved! " + puzzle.getOutcome(), false, false);
                 }
             }
         }
 
-        // Consumable item use
         if (item.isConsumable()) {
+            if (item.getName().equalsIgnoreCase("Attack Potion")) {
+                attackBonus += item.getStatValue();
+                removeItem(item);
+                return new GameResult("Attack Potion used. Attack bonus increased by " + item.getStatValue() + ".", false, false);
+            }
+
+            if (item.getName().equalsIgnoreCase("Curse Potion")) {
+                defenseBonus += item.getStatValue();
+                removeItem(item);
+                return new GameResult("Curse Potion used. Defense bonus increased by " + item.getStatValue() + ".", false, false);
+            }
+
             int effect = item.getHealthEffect();
 
             if (effect >= 0) {
@@ -258,7 +281,6 @@ public class Player {
             return new GameResult(item.getName() + " used. Health: " + health + "/" + maxHealth, false, false);
         }
 
-        // Utility item use outside puzzle
         if (item.isUtility()) {
             return new GameResult("You used " + item.getName() + ".", false, false);
         }
@@ -271,7 +293,7 @@ public class Player {
             return new GameResult("There is no puzzle here.", false, false);
         }
 
-        return new GameResult("Puzzle mode started.", false, true);
+        return new GameResult("You inspect the puzzle.", false, true);
     }
 
     public GameResult solvePuzzle(String answer, Room room) {
@@ -288,7 +310,7 @@ public class Player {
         boolean correct = puzzle.attemptAnswer(answer.trim());
 
         if (correct) {
-            return new GameResult("Correct! " + puzzle.getOutcome(), true, false);
+            return new GameResult("Correct! " + puzzle.getOutcome(), false, false);
         }
 
         takeDamage(5);
@@ -316,7 +338,7 @@ public class Player {
 
         Monster monster = room.getMonster();
 
-        int damage = 5;
+        int damage = 5 + attackBonus;
 
         if (equippedWeapon != null) {
             damage += equippedWeapon.getStatValue();
@@ -328,10 +350,14 @@ public class Player {
             return new GameResult("You defeated the " + monster.getName() + ".", false, false);
         }
 
-        int incomingDamage = monster.getDamage();
+        int incomingDamage = monster.getDamage() - defenseBonus;
 
         if (equippedArmor != null) {
-            incomingDamage = Math.max(0, incomingDamage - equippedArmor.getStatValue());
+            incomingDamage -= equippedArmor.getStatValue();
+        }
+
+        if (incomingDamage < 0) {
+            incomingDamage = 0;
         }
 
         takeDamage(incomingDamage);
@@ -343,7 +369,7 @@ public class Player {
         return new GameResult(
                 "You hit the " + monster.getName() + " for " + damage + " damage.\n" +
                         "The " + monster.getName() + " hit you for " + incomingDamage + " damage.\n" +
-                        "Available commands: attack, defend, flee",
+                        "You can attack, defend, or flee.",
                 false,
                 false
         );
@@ -355,7 +381,14 @@ public class Player {
         }
 
         Monster monster = room.getMonster();
-        int incomingDamage = Math.max(0, monster.getDamage() / 2);
+
+        int incomingDamage = monster.getDamage() - defenseBonus;
+
+        if (equippedArmor != null) {
+            incomingDamage -= equippedArmor.getStatValue();
+        }
+
+        incomingDamage = Math.max(0, incomingDamage / 2);
 
         takeDamage(incomingDamage);
 
@@ -372,6 +405,6 @@ public class Player {
         }
 
         returnToPreviousRoom();
-        return new GameResult("You fled back to the previous room.", false, false);
+        return new GameResult("You fled back to the previous room.", true, false);
     }
 }

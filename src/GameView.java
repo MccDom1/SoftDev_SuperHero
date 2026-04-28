@@ -11,7 +11,7 @@ public class GameView {
 
             if (room != null) {
                 System.out.println("\nYou're in the " + room.getRoomName() + ".");
-                System.out.println(room.getRoomDesc());
+                System.out.println(formatText(room.getRoomDesc()));
 
                 if (!room.getItems().isEmpty()) {
                     System.out.println("\nItems here:");
@@ -36,11 +36,19 @@ public class GameView {
             if (room != null && room.hasPuzzle()) {
                 Puzzle puzzle = room.getPuzzle();
 
-                System.out.println("\nPuzzle:");
-                System.out.println(puzzle.getDescription());
+                System.out.println("\nPuzzle: " + puzzle.getPuzzleName());
+                System.out.println(formatText(puzzle.getDescription()));
                 System.out.println("Attempts left: " + puzzle.getRemainingAttempts());
                 System.out.println("Submit answer with: solve <answer>");
             }
         }
+    }
+
+    private String formatText(String text) {
+        if (text == null) {
+            return "";
+        }
+
+        return text.replace(". ", ".\n");
     }
 }
