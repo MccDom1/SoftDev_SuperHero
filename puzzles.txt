@@ -4,7 +4,7 @@ PZ01 | The Scholar's Sequence | Three brightly colored books - Red, Yellow, Blue
 
 PZ02 | The Broken Lullaby | A music box plays an odd discordant tune. A gear is missing from its mechanism. | Silver Cog | 3 | false | Item Dropped: Silver Cog = Health +15 | Nursery | R_16
 
-PZ03 | The Chef's Secret | A recipe book has a greasy thumbprint over the final ingredient for a Soul Soup. Something is missing from the pot. | Bitter Herb | 3 | false | Item Dropped: Attack Potion = Attack +15 | Kitchen | R_10
+PZ03 | The Chef's Secret | A recipe book has a greasy thumbprint over the final ingredient for a Soul Soup. Something is missing from the pot. | Bitter Herb | 3 | false | Item Dropped: Attack Potion = Attack +25 | Kitchen | R_10
 
 PZ04 | The Silent Prayer | A locked box requires a sequence of three symbols found on the walls somewhere in the mansion. Arrange them in the correct order to unlock it. | Eye Star Dagger | 5 | false | Item Dropped: Health Stone | Secret Underground Chapel | R_14
 
